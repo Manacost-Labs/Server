@@ -14,6 +14,7 @@ import shlex
 import sys
 import tempfile
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -79,6 +80,8 @@ def _contains_media(value: Any, depth: int = 0) -> bool:
     if depth > 30:
         return True
     if isinstance(value, dict):
+        if "blob" in value:
+            return True
         content_type = value.get("type")
         if isinstance(content_type, str) and content_type.lower() in MEDIA_TYPES:
             return True
@@ -107,6 +110,21 @@ def _records_dir(base_dir: Path) -> Path:
     records = base_dir / "records"
     _ensure_private_directory(records)
     return records
+
+
+@contextmanager
+def _archive_lock(config: Config):
+    _ensure_private_directory(config.base_dir)
+    path = config.base_dir / "records.lock"
+    flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(path, flags, 0o600)
+    try:
+        os.fchmod(descriptor, 0o600)
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
 
 
 def _observation_id(event: dict[str, Any], raw: str) -> str:
@@ -212,19 +230,69 @@ def _unlink_regular(path: Path) -> None:
         return
 
 
-def _iter_record_pairs(records: Path) -> Iterable[tuple[float, int, str, Path, Path]]:
-    for metadata_path in records.glob("*.json"):
-        observation_id = metadata_path.stem
-        if not ID_PATTERN.fullmatch(observation_id):
+def _iter_storage_units(
+    records: Path,
+) -> Iterable[tuple[float, int, str | None, tuple[Path, ...]]]:
+    files = {
+        path.name: path
+        for path in records.iterdir()
+        if not path.is_symlink() and path.is_file()
+    }
+    consumed: set[str] = set()
+    for name in sorted(files):
+        if name in consumed:
             continue
-        data_path = records / f"{observation_id}.txt.gz"
-        if metadata_path.is_symlink() or data_path.is_symlink():
+        path = files[name]
+        observation_id: str | None = None
+        counterpart_name: str | None = None
+        if name.endswith(".json") and ID_PATTERN.fullmatch(name[:-5]):
+            observation_id = name[:-5]
+            counterpart_name = f"{observation_id}.txt.gz"
+        elif name.endswith(".txt.gz") and ID_PATTERN.fullmatch(name[:-7]):
+            observation_id = name[:-7]
+            counterpart_name = f"{observation_id}.json"
+
+        if counterpart_name in files:
+            paths = (path, files[counterpart_name])
+            consumed.add(counterpart_name)
+        else:
+            paths = (path,)
+            observation_id = None
+        consumed.add(name)
+        stats = [item.stat() for item in paths]
+        yield (
+            max(stat.st_mtime for stat in stats),
+            sum(stat.st_size for stat in stats),
+            observation_id,
+            paths,
+        )
+
+
+def _unlink_paths(paths: Iterable[Path]) -> None:
+    for path in paths:
+        _unlink_regular(path)
+
+
+def _cleanup_unlocked(
+    config: Config,
+    now: float,
+    protected_ids: set[str],
+) -> None:
+    records = _records_dir(config.base_dir)
+    units = list(_iter_storage_units(records))
+    for modified, _, observation_id, paths in units:
+        if observation_id not in protected_ids and modified < now - config.ttl_seconds:
+            _unlink_paths(paths)
+
+    units = sorted(_iter_storage_units(records), key=lambda item: item[0])
+    total = sum(item[1] for item in units)
+    for _, size, observation_id, paths in units:
+        if total <= config.max_storage_bytes:
+            break
+        if observation_id in protected_ids:
             continue
-        if not metadata_path.is_file() or not data_path.is_file():
-            continue
-        stat = metadata_path.stat()
-        size = stat.st_size + data_path.stat().st_size
-        yield stat.st_mtime, size, observation_id, metadata_path, data_path
+        _unlink_paths(paths)
+        total -= size
 
 
 def cleanup(
@@ -234,23 +302,8 @@ def cleanup(
 ) -> None:
     now = time.time() if now is None else now
     protected_ids = protected_ids or set()
-    records = _records_dir(config.base_dir)
-    pairs = list(_iter_record_pairs(records))
-    for modified, _, observation_id, metadata_path, data_path in pairs:
-        if observation_id not in protected_ids and modified < now - config.ttl_seconds:
-            _unlink_regular(metadata_path)
-            _unlink_regular(data_path)
-
-    pairs = sorted(_iter_record_pairs(records), key=lambda item: item[0])
-    total = sum(item[1] for item in pairs)
-    for _, size, observation_id, metadata_path, data_path in pairs:
-        if total <= config.max_storage_bytes:
-            break
-        if observation_id in protected_ids:
-            continue
-        _unlink_regular(metadata_path)
-        _unlink_regular(data_path)
-        total -= size
+    with _archive_lock(config):
+        _cleanup_unlocked(config, now, protected_ids)
 
 
 def _receipt(observation_id: str, raw: str, config: Config) -> str:
@@ -302,39 +355,57 @@ def process_event(
         cleanup(config, now=now)
         return None
 
-    cleanup(config, now=now)
-    records = _records_dir(config.base_dir)
-    observation_id = _observation_id(event, raw)
-    metadata_path, data_path = _record_paths(records, observation_id)
-    digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
-    _atomic_write_gzip(data_path, raw)
-    _atomic_write_json(
-        metadata_path,
-        {
-            "created_at": int(now),
-            "data_file": data_path.name,
-            "line_count": len(raw.splitlines()),
-            "observation_id": observation_id,
-            "original_bytes": original_bytes,
-            "sha256": digest,
-            "tool_name": tool_name,
-        },
-    )
-    receipt = _receipt(observation_id, raw, config)
-    visible_bytes = len(receipt.encode("utf-8"))
-    _append_metric(
-        config,
-        {
-            "archived": True,
-            "estimated_saved_bytes": max(0, original_bytes - visible_bytes),
-            "observation_id": observation_id,
-            "original_bytes": original_bytes,
-            "timestamp": int(now),
-            "tool_name": tool_name,
-            "visible_bytes": visible_bytes,
-        },
-    )
-    cleanup(config, now=now, protected_ids={observation_id})
+    with _archive_lock(config):
+        _cleanup_unlocked(config, now, set())
+        records = _records_dir(config.base_dir)
+        observation_id = _observation_id(event, raw)
+        metadata_path, data_path = _record_paths(records, observation_id)
+        digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        _atomic_write_gzip(data_path, raw)
+        _atomic_write_json(
+            metadata_path,
+            {
+                "created_at": int(now),
+                "data_file": data_path.name,
+                "line_count": len(raw.splitlines()),
+                "observation_id": observation_id,
+                "original_bytes": original_bytes,
+                "sha256": digest,
+                "tool_name": tool_name,
+            },
+        )
+        record_size = metadata_path.stat().st_size + data_path.stat().st_size
+        if record_size > config.max_storage_bytes:
+            _unlink_paths((metadata_path, data_path))
+            _append_metric(
+                config,
+                {
+                    "archived": False,
+                    "estimated_saved_bytes": 0,
+                    "original_bytes": original_bytes,
+                    "timestamp": int(now),
+                    "tool_name": tool_name,
+                    "visible_bytes": original_bytes,
+                },
+            )
+            _cleanup_unlocked(config, now, set())
+            return None
+
+        receipt = _receipt(observation_id, raw, config)
+        visible_bytes = len(receipt.encode("utf-8"))
+        _append_metric(
+            config,
+            {
+                "archived": True,
+                "estimated_saved_bytes": max(0, original_bytes - visible_bytes),
+                "observation_id": observation_id,
+                "original_bytes": original_bytes,
+                "timestamp": int(now),
+                "tool_name": tool_name,
+                "visible_bytes": visible_bytes,
+            },
+        )
+        _cleanup_unlocked(config, now, {observation_id})
     # Codex 0.153 reliably exposes PostToolUse feedback through the legacy
     # block shape. The tool has already run; this only replaces its oversized
     # model-visible result with the receipt.
@@ -410,24 +481,23 @@ def metrics_summary(base_dir: Path) -> dict[str, Any]:
 
 
 def _run_hook(config: Config) -> int:
-    raw_input = sys.stdin.buffer.read(config.max_input_bytes + 1)
-    if len(raw_input) > config.max_input_bytes:
-        return 0
     try:
+        raw_input = sys.stdin.buffer.read(config.max_input_bytes + 1)
+        if len(raw_input) > config.max_input_bytes:
+            return 0
         event = json.loads(raw_input)
         if not isinstance(event, dict):
             return 0
         result = process_event(event, config)
+        if result is not None:
+            json.dump(result, sys.stdout, ensure_ascii=False, separators=(",", ":"))
+            sys.stdout.write("\n")
     except Exception:
         return 0
-    if result is not None:
-        json.dump(result, sys.stdout, ensure_ascii=False, separators=(",", ":"))
-        sys.stdout.write("\n")
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
-    config = Config.from_environment()
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command")
     recall_parser = subparsers.add_parser("recall", help="Recall exact archived lines")
@@ -439,6 +509,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
+        config = Config.from_environment()
         if args.command == "recall":
             sys.stdout.write(
                 recall_lines(
@@ -457,6 +528,8 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         return _run_hook(config)
     except (OSError, ValueError, json.JSONDecodeError) as error:
+        if args.command is None:
+            return 0
         print(f"observation-pack: {error}", file=sys.stderr)
         return 2
 

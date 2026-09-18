@@ -1,11 +1,13 @@
 import gzip
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 INTEGRATION = (
     Path(__file__).resolve().parents[1]
@@ -99,6 +101,18 @@ class ObservationPackTests(unittest.TestCase):
 
         self.assertIsNone(result)
 
+    def test_embedded_binary_resource_passes_through_without_archive(self):
+        response = {
+            "content": [
+                {"type": "resource", "resource": {"blob": "A" * 1000}}
+            ]
+        }
+
+        result = pack.process_event(self.event(response), self.config, now=1000)
+
+        self.assertIsNone(result)
+        self.assertFalse((self.base / "records").exists())
+
     def test_identifier_is_safe_and_does_not_include_session_value(self):
         result = pack.process_event(self.event("x" * 300), self.config, now=1000)
 
@@ -137,19 +151,61 @@ class ObservationPackTests(unittest.TestCase):
         self.assertFalse(data_path.exists())
 
     def test_storage_cap_removes_oldest_records(self):
-        small_cap = pack.Config(**{**self.config.__dict__, "max_storage_bytes": 50})
+        roomy = pack.Config(**{**self.config.__dict__, "max_storage_bytes": 4096})
         first = pack.process_event(
-            self.event("a" * 300, tool_use_id="one"), small_cap, now=1000
+            self.event("a" * 300, tool_use_id="one"), roomy, now=1000
         )
         first_id = pack.extract_observation_id(first["reason"])
         time.sleep(0.01)
-        pack.process_event(
-            self.event("b" * 300, tool_use_id="two"), small_cap, now=1001
+        second = pack.process_event(
+            self.event("b" * 300, tool_use_id="two"), roomy, now=1001
+        )
+        second_id = pack.extract_observation_id(second["reason"])
+        records = self.base / "records"
+        second_size = sum(
+            (records / f"{second_id}{suffix}").stat().st_size
+            for suffix in (".json", ".txt.gz")
+        )
+        one_record_cap = pack.Config(
+            **{**self.config.__dict__, "max_storage_bytes": second_size}
         )
 
-        pack.cleanup(small_cap, now=1001)
+        pack.cleanup(one_record_cap, now=1001)
 
         self.assertFalse((self.base / "records" / f"{first_id}.json").exists())
+        self.assertTrue((self.base / "records" / f"{second_id}.json").exists())
+
+    def test_storage_cap_counts_orphaned_and_temporary_files(self):
+        records = self.base / "records"
+        records.mkdir(mode=0o700)
+        orphan = records / "0123456789abcdef01234567.txt.gz"
+        interrupted = records / ".observation-interrupted"
+        orphan.write_bytes(b"o" * 80)
+        interrupted.write_bytes(b"t" * 80)
+        bounded = pack.Config(**{**self.config.__dict__, "max_storage_bytes": 50})
+
+        pack.cleanup(bounded, now=1000)
+
+        stored_bytes = sum(
+            path.stat().st_size
+            for path in records.iterdir()
+            if path.is_file() and not path.is_symlink()
+        )
+        self.assertLessEqual(stored_bytes, 50)
+
+    def test_record_that_cannot_fit_storage_cap_passes_through(self):
+        tiny_cap = pack.Config(**{**self.config.__dict__, "max_storage_bytes": 1})
+
+        result = pack.process_event(self.event("x" * 300), tiny_cap, now=1000)
+
+        self.assertIsNone(result)
+        records = self.base / "records"
+        stored_bytes = sum(
+            path.stat().st_size
+            for path in records.iterdir()
+            if path.is_file() and not path.is_symlink()
+        )
+        self.assertLessEqual(stored_bytes, 1)
 
     def test_metrics_record_estimated_context_savings(self):
         original = "z" * 1000
@@ -184,6 +240,34 @@ class ObservationPackTests(unittest.TestCase):
             )
 
         self.assertLessEqual((self.base / "metrics.jsonl").stat().st_size, 500)
+
+    def test_invalid_environment_is_fail_open_for_hook_invocation(self):
+        environment = os.environ.copy()
+        environment["CODEX_OBSERVATION_PACK_MIN_BYTES"] = "not-a-number"
+
+        completed = subprocess.run(
+            [sys.executable, str(INTEGRATION / "observation_pack.py")],
+            input=b"{}",
+            capture_output=True,
+            env=environment,
+            check=False,
+        )
+
+        self.assertEqual(0, completed.returncode)
+        self.assertEqual(b"", completed.stdout)
+        self.assertEqual(b"", completed.stderr)
+
+    def test_input_read_failure_is_fail_open(self):
+        class BrokenInput:
+            class Buffer:
+                @staticmethod
+                def read(_limit):
+                    raise OSError("synthetic read failure")
+
+            buffer = Buffer()
+
+        with mock.patch.object(pack.sys, "stdin", BrokenInput()):
+            self.assertEqual(0, pack._run_hook(self.config))
 
 
 if __name__ == "__main__":

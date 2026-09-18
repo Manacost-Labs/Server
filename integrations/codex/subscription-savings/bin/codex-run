@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  printf '%s\n' \
+    'Usage: codex-run {luna|terra} [minimal|code|web|research|github|infra|typeui] [codex arguments...]' \
+    '       codex-run {sol|astra} --reason TEXT --package PATH [minimal|code|web|research|github|infra|typeui] [codex arguments...]' >&2
+}
+
+model=${1:-}
+shift || true
+case "$model" in
+  luna) model_id='gpt-5.6-luna' ;;
+  terra) model_id='gpt-5.6-terra' ;;
+  sol) model_id='gpt-5.6-sol' ;;
+  astra) model_id='gpt-6-astra' ;;
+  *) usage; exit 2 ;;
+esac
+
+reason=''
+package=''
+if [[ $model == sol || $model == astra ]]; then
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --reason) reason=${2:-}; shift 2 ;;
+      --package) package=${2:-}; shift 2 ;;
+      *) break ;;
+    esac
+  done
+  [[ ${#reason} -ge 12 ]] || {
+    printf '%s\n' 'codex-run: senior model requires a specific --reason' >&2
+    exit 2
+  }
+  [[ -f $package ]] || {
+    printf '%s\n' 'codex-run: senior model requires one bounded --package file' >&2
+    exit 2
+  }
+  context-budget "$package" >/dev/null
+fi
+
+profile=${1:-minimal}
+case "$profile" in
+  minimal) shift || true; exec codex -m "$model_id" "$@" ;;
+  code|web|research|github|infra|typeui) shift; exec codex -p "$profile" -m "$model_id" "$@" ;;
+  *) usage; exit 2 ;;
+esac

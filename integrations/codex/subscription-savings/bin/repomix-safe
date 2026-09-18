@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+budget=12000
+root=''
+include=''
+output=''
+compress=false
+
+usage() {
+  printf '%s\n' 'Usage: repomix-safe ROOT --include GLOBS --output PACKAGE.md [--compress] [--budget TOKENS]' >&2
+}
+
+[[ $# -gt 0 ]] || { usage; exit 2; }
+root=$1
+shift
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --include) include=${2:-}; shift 2 ;;
+    --output) output=${2:-}; shift 2 ;;
+    --budget) budget=${2:-}; shift 2 ;;
+    --compress) compress=true; shift ;;
+    *) usage; exit 2 ;;
+  esac
+done
+
+[[ -d $root ]] || {
+  printf '%s\n' 'repomix-safe: ROOT must be an existing directory' >&2
+  exit 2
+}
+[[ -n $include && -n $output ]] || {
+  printf '%s\n' 'repomix-safe: --include and --output are required' >&2
+  exit 2
+}
+[[ $budget =~ ^[1-9][0-9]*$ ]] || {
+  printf '%s\n' 'repomix-safe: --budget must be a positive integer' >&2
+  exit 2
+}
+repomix=${REPOMIX_BIN:-$(command -v repomix || true)}
+[[ -n $repomix && -x $repomix ]] || {
+  printf '%s\n' 'repomix-safe: repomix is not installed; set REPOMIX_BIN if needed' >&2
+  exit 127
+}
+
+args=(
+  "$root"
+  --include "$include"
+  --ignore '.env*,**/.env*,*.pem,*.key,*.p12,*.db,*.sqlite*,*dump*'
+  --output "$output"
+  --style markdown
+  --quiet
+  --no-file-summary
+  --no-directory-structure
+  --token-budget "$budget"
+)
+if [[ $compress == true ]]; then
+  args+=(--compress)
+fi
+"$repomix" "${args[@]}"
+context-budget --limit "$budget" "$output" >/dev/null
+printf 'Context package created: %s (budget %s tokens).\n' "$output" "$budget"

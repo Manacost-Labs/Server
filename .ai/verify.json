@@ -20,6 +20,12 @@
       "covers": ["unit", "security"]
     },
     {
+      "id": "observation-pack-regressions",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_observation_pack.py"],
+      "min_risk": "LOW",
+      "covers": ["unit", "security"]
+    },
+    {
       "id": "policy",
       "argv": [
         "python3",
@@ -125,9 +131,11 @@
         "tests/test_dispatch_launcher.py",
         "scripts/check_changed_secrets.py",
         "scripts/scope_guard.py",
+        "integrations/codex/subscription-savings/observation_pack.py",
         "tests/test_engineering.py",
         "tests/test_changed_secrets.py",
-        "tests/test_scope_guard.py"
+        "tests/test_scope_guard.py",
+        "tests/test_observation_pack.py"
       ],
       "min_risk": "MEDIUM",
       "covers": [
@@ -143,7 +151,12 @@
         "scripts/validate-registry.sh",
         "scripts/check-agent-entrypoints.sh",
         "scripts/install-server-entrypoints.sh",
-        "scripts/install-global-agent-entrypoints.sh"
+        "scripts/install-global-agent-entrypoints.sh",
+        "integrations/codex/subscription-savings/bin/context-budget",
+        "integrations/codex/subscription-savings/bin/codex-context",
+        "integrations/codex/subscription-savings/bin/codex-run",
+        "integrations/codex/subscription-savings/bin/repomix-safe",
+        "integrations/codex/subscription-savings/bin/compact-plus-hook"
       ],
       "min_risk": "MEDIUM",
       "covers": [

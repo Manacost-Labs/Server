@@ -1,0 +1,71 @@
+# Replace /ABSOLUTE/PATH/TO/skills with the absolute checkout path.
+# Install the two optional third-party plugins before enabling their blocks.
+# Do not copy hooks.state trust hashes between machines; review hooks with
+# `/hooks` so Codex records trust for the exact local command.
+
+[[hooks.Stop]]
+matcher = "*"
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = "node /ABSOLUTE/PATH/TO/codex-usage-monitor/bin/on-stop.js"
+timeout = 30
+
+[[hooks.UserPromptSubmit]]
+matcher = "*"
+
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook userpromptsubmit-compaction-recovery.sh"
+timeout = 5
+
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook userpromptsubmit-compact-plus-reminder.sh"
+timeout = 3
+
+[[hooks.PreCompact]]
+matcher = "*"
+
+[[hooks.PreCompact.hooks]]
+type = "command"
+command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook precompact-transcript-backup.sh"
+timeout = 30
+
+[[hooks.PreCompact.hooks]]
+type = "command"
+command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook precompact-state-summary.sh"
+timeout = 120
+
+[[hooks.PostCompact]]
+matcher = "*"
+
+[[hooks.PostCompact.hooks]]
+type = "command"
+command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook compaction-recovery.sh"
+timeout = 5
+
+[[hooks.SessionStart]]
+matcher = "compact"
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook sessionstart-compaction-recovery.sh"
+timeout = 5
+
+[[hooks.SessionStart]]
+matcher = "*"
+
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook sessionstart-export-session-id.sh"
+timeout = 3
+
+[[hooks.PostToolUse]]
+matcher = ".*"
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "/usr/bin/python3 /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/observation_pack.py"
+timeout = 5
+statusMessage = "Packing oversized tool output"

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  printf '%s\n' 'Usage: codex-context {minimal|code|web|research|github|infra|typeui} [codex arguments...]' >&2
+}
+
+profile=${1:-}
+case "$profile" in
+  minimal) shift; exec codex "$@" ;;
+  code|web|research|github|infra|typeui) shift; exec codex -p "$profile" "$@" ;;
+  *) usage; exit 2 ;;
+esac

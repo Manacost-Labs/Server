@@ -1,0 +1,28 @@
+profile: icecrow
+version: 1
+description: IceCrow — Windows-трекер Hearthstone, интеграция с клиентом, экономный headless-сбор и синхронизация профиля HearthPulse.
+
+activation: on-demand
+available:
+  - engineering/codebase-design
+  - engineering/domain-modeling
+  - engineering/diagnosing-bugs
+  - engineering/addy/api-and-interface-design
+  - engineering/addy/performance-optimization
+  - engineering/addy/source-driven-development
+  - data/test-driven-development
+  - data/systematic-debugging
+  - data/verification-before-completion
+  - hearthpulse/arch-boundaries
+  - hearthpulse/api-contract-change
+  - hearthpulse/new-feature-slice
+  - hearthpulse/verify-gate
+  - hearthpulse/checkpoint-commit
+
+guardrails:
+  - load-only-the-smallest-relevant-set
+  - maximum-five-skills-per-phase-without-written-reason
+  - project-agents-are-authoritative
+  - preserve-source-confidence
+  - profile-sync-is-personal-data-not-anonymous-telemetry
+  - performance-must-be-measured

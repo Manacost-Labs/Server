@@ -18,7 +18,7 @@ fail() {
 [[ -f "$source_inventory" ]] || fail "missing inventory/sources.tsv"
 [[ -f "$external_inventory" ]] || fail "missing inventory/external-skills.tsv"
 
-for required in AGENTS.md README.md docs/migration.md docs/engineering-skills.md docs/agent-entrypoints.md integrations/cursor/manacost-global.mdc profiles/server.yaml profiles/openbot.yaml profiles/hearthpulse.yaml profiles/wordpress.yaml profiles/data.yaml profiles/engineering.yaml third_party/NOTICE.md scripts/check-agent-entrypoints.sh scripts/install-global-agent-entrypoints.sh; do
+for required in AGENTS.md README.md docs/migration.md docs/engineering-skills.md docs/agent-entrypoints.md integrations/cursor/manacost-global.mdc profiles/server.yaml profiles/openbot.yaml profiles/hearthpulse.yaml profiles/icecrow.yaml profiles/wordpress.yaml profiles/data.yaml profiles/engineering.yaml third_party/NOTICE.md scripts/check-agent-entrypoints.sh scripts/install-global-agent-entrypoints.sh; do
   [[ -f "$repo_root/$required" ]] || fail "missing $required"
 done
 

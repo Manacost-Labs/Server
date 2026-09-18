@@ -50,6 +50,9 @@ profiles:
   - id: hearthpulse
     file: profiles/hearthpulse.yaml
     purpose: HearthPulse application work
+  - id: icecrow
+    file: profiles/icecrow.yaml
+    purpose: IceCrow desktop tracker, headless capture, and HearthPulse profile sync
   - id: wordpress
     file: profiles/wordpress.yaml
     purpose: WordPress sites, plugins, and publishing

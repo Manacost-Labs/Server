@@ -87,6 +87,8 @@ detect_profile() {
   local project_root=$1
   case "$project_root" in
     */work.kolodahearthstone.com|*/work-koloda-data-control-6h*) printf 'openbot\n' ;;
+    */IceCrow|*/icecrow-*) printf 'icecrow
+' ;;
     */HeartPulse|*/heartpulse-*|*/arena.hs-manacost.ru*) printf 'hearthpulse\n' ;;
     */wordpress/*|*hs-manacost*|*kolodahearthstone*) printf 'wordpress\n' ;;
     */ParsesUnix|*/data/*|*/api-*) printf 'data\n' ;;

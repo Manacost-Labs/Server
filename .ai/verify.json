@@ -26,6 +26,12 @@
       "covers": ["unit", "security"]
     },
     {
+      "id": "context-economy-regressions",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_context_economy.py"],
+      "min_risk": "LOW",
+      "covers": ["unit", "integration", "security"]
+    },
+    {
       "id": "policy",
       "argv": [
         "python3",
@@ -132,6 +138,10 @@
         "scripts/check_changed_secrets.py",
         "scripts/scope_guard.py",
         "integrations/codex/subscription-savings/observation_pack.py",
+        "integrations/codex/subscription-savings/context_economy.py",
+        "integrations/codex/subscription-savings/context_economy",
+        "integrations/codex/subscription-savings/skill/scripts/context-economy.py",
+        "tests/test_context_economy.py",
         "tests/test_engineering.py",
         "tests/test_changed_secrets.py",
         "tests/test_scope_guard.py",

@@ -1,5 +1,8 @@
 # Подготовка контекста, память и TypeSafe
 
+Сохранённые [решения об экономии и дешёвых моделях](TOKEN-ECONOMY-DECISIONS.md)
+и [каталог рассмотренных инструментов](TOKEN-ECONOMY-TOOLS.md), 2026-09-21.
+
 Локальная надстройка над существующими RTK, ObservationPack, `context-budget`
 и `codex-context`. Требуется Python 3.10+ с SQLite FTS5, Linux/macOS; для
 `--check-budget` также нужен установленный `tiktoken-cli`.

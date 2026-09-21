@@ -1,0 +1,18 @@
+[Unit]
+Description=Local project memory for Codex
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.local/share/codex-context-economy/current/serve_ai_memory.py
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=%h/.local/share/ai-memory/server
+ProtectHome=read-only
+
+[Install]
+WantedBy=default.target

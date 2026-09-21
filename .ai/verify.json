@@ -32,6 +32,12 @@
       "covers": ["unit", "integration", "security"]
     },
     {
+      "id": "ai-memory-adapter-regressions",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_ai_memory_adapter.py"],
+      "min_risk": "LOW",
+      "covers": ["unit", "integration", "security"]
+    },
+    {
       "id": "policy",
       "argv": [
         "python3",
@@ -142,6 +148,9 @@
         "integrations/codex/subscription-savings/context_economy",
         "integrations/codex/subscription-savings/skill/scripts/context-economy.py",
         "tests/test_context_economy.py",
+        "tests/test_ai_memory_adapter.py",
+        "integrations/codex/subscription-savings/memory_hook.py",
+        "integrations/codex/subscription-savings/serve_ai_memory.py",
         "tests/test_engineering.py",
         "tests/test_changed_secrets.py",
         "tests/test_scope_guard.py",

@@ -9,7 +9,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from context_economy import memory, output, packing, reporting, typesafe
+from context_economy import ai_memory, memory, output, packing, reporting, typesafe
 from context_economy.common import Store, encode, read_source
 
 
@@ -74,15 +74,16 @@ def main(argv=None):
         with Store(args.project, args.state_dir) as store:
             if args.command == "remember":
                 result = {"id": memory.add(store, args.text, args.evidence, args.source, args.ttl_days)}
+                result["storage"] = ai_memory.mirror(store, result["id"])
             elif args.command == "inspect":
                 result = memory.inspect(store, args.id)
             elif args.command == "recall":
-                notes = memory.search(store, args.query, args.limit)
+                notes = ai_memory.search(store, args.query, args.limit)
                 result = (typesafe.payload_for(args.query, notes, args.typesafe_model)
                           if args.preview_remote else ranking(args, store, args.query, notes))
             elif args.command == "pack":
                 task = json.loads(read_source(store.root, args.task)["text"])
-                notes = memory.search(store, args.query) if args.query else []
+                notes = ai_memory.search(store, args.query) if args.query else []
                 ranked = ranking(args, store, args.query or task.get("goal", ""), notes)
                 result = packing.build(store.root, task, args.source, args.required, ranked["notes"], args.budget)
                 if args.check_budget:

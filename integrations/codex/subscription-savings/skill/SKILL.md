@@ -54,6 +54,22 @@ do not copy this directory alone.
   preparation and review in measurements; use null for unavailable metrics.
   Repeated turns are not new tasks. Do not run an extra baseline merely to fill
   the dataset. See `ADVISORY-PILOT.md` for fields and comparison limits.
+- For an authorized measured task, run `meter-start --task-id ID --session EXACT_JSONL`
+  once at the task boundary. Use the current session path, never another task's
+  newest file. `meter-snapshot` reads only new events; `meter-finish` freezes the
+  interval. `pilot-record --file outcome.json --meter-task ID` fills missing metrics;
+  still provide actual quality evidence. Counters may lag the current turn.
+- Pin critical exact source quotes with `assist --facts facts.json`; missing quotes
+  restore their original fragments. This does not prove semantic completeness.
+- Reuse `brief --source PATH:START:END --purpose documentation` for task-independent
+  file references. Cache keys include full source version and purpose. Remote
+  misses need the existing consent/budget flags. Check relevance to the new task.
+- Use `focus --task task.json --source CHANGED_FRAGMENT --search-in SOURCE_DIR
+  --search-in TEST_DIR --budget 6000` to build a bounded Probe packet. Specify
+  --query when derived names are insufficient; matches are not a complete graph.
+- Prefer bounded `read --source PATH:START:END` and `gate --hypothesis TEXT
+  --watch-source PATH -- COMMAND` when repetition hints help. Hints never suppress
+  results or authorize model escalation. Details: `ECONOMY-WORKFLOW.md`.
 
 Use `--help` for exact parameters. Measurements go through `record --file` and
 `report --end-to-end`; count preparation and failed attempts. Missing usage is

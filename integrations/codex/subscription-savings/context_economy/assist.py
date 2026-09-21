@@ -4,7 +4,7 @@ import copy
 import json
 import re
 
-from . import packing, remote, typesafe
+from . import facts, packing, remote, typesafe
 from .common import encode, read_source
 
 PURPOSES = ("context", "memory", "documentation", "review")
@@ -29,13 +29,17 @@ def prepare(root, task_path, specs, required, purpose, budget):
     candidates = {f"s{i}": source for i, source in enumerate(sources)}
     state = {"task": task, "purpose": purpose,
              "sources": {key: source["text"] for key, source in candidates.items()}}
+    check_remote_state(state)
+    return document, candidates, state
+
+
+def check_remote_state(state):
     serialized = encode(state)
     if len(serialized.encode()) > 24000:
         raise ValueError("Remote candidate state exceeds 24 KB; narrow explicit line ranges")
     if re.search(r"-----BEGIN .*PRIVATE KEY|\b(?:sk-|ghp_|github_pat_)[A-Za-z0-9_\-]{16,}"
                  r"|(?:api[_-]?key|password|secret|token)\s*[=:]\s*[^\s\"]{8,}", serialized, re.I):
         raise ValueError("Potential secret in selected state; remove it before remote use")
-    return document, candidates, state
 
 
 def payloads(state):
@@ -101,6 +105,7 @@ def run(store, args):
     task_hash = read_source(store.root, args.task)["sha256"]
     original, candidates, state = prepare(store.root, args.task, args.source, args.required,
                                            args.purpose, args.budget)
+    critical, fact_source = facts.load(store.root, getattr(args, "facts", None), candidates, original)
     requests = payloads(state)
     providers = ["jev", "gemma"] if args.provider == "cascade" else [args.provider]
     if args.preview_remote:
@@ -144,6 +149,7 @@ def run(store, args):
             lookup = {s["source"]: assessments[k] for k, s in candidates.items()}
             packet["context"].sort(key=lambda item: (
                 lookup[item["source"]]["choice"] != "relevant", -lookup[item["source"]]["confidence"]))
+        result["restored_critical_sources"] = facts.restore(packet, critical, candidates)
         if packing.estimate(encode(packet)) > args.budget:
             raise ValueError("Assisted packet exceeds context budget")
         if draft and len(encode(packet).encode()) >= len(encode(original).encode()):
@@ -161,6 +167,8 @@ def run(store, args):
         ledger.close()
     # Check even after a failed HTTP request: the fallback can also become stale.
     checked = [*candidates.values(), *original["required_sources"]]
+    if fact_source:
+        checked.append(fact_source)
     try:
         changed = (read_source(store.root, args.task)["sha256"] != task_hash
                    or any(read_source(store.root, s["source"])["sha256"] != s["sha256"] for s in checked))

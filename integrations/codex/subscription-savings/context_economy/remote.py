@@ -10,6 +10,7 @@ import time
 import urllib.request
 from pathlib import Path
 
+from . import meter
 from .common import Store, digest, encode
 from .typesafe import NoRedirect
 
@@ -111,15 +112,20 @@ def request(store, ledger, provider, payload, budget, validate, timeout=15):
     if row:
         try:
             response = json.loads(row[0])
-            return validate(response), {"provider": provider, "status": "cache", "usage": response.get("usage"),
-                                        "request_cost_usd": 0}
+            result = validate(response)
+            meter.remote_event(store, "cache")
+            return result, {"provider": provider, "status": "cache", "usage": response.get("usage"),
+                            "request_cost_usd": 0}
         except (ValueError, TypeError, KeyError):
             pass
     key = api_key()  # Missing credentials cannot spend a reservation.
     identifier = ledger.reserve(provider, fingerprint, budget)
+    recorded = False
     try:
         response = send(provider, payload, key, timeout)
         ledger.finish(identifier, response)
+        meter.remote_event(store, "remote", response.get("usage") if isinstance(response, dict) else None)
+        recorded = True
         result = validate(response)
         with store.db:
             store.db.execute("INSERT OR REPLACE INTO assistant_cache VALUES (?,?,?)",
@@ -132,3 +138,6 @@ def request(store, ledger, provider, payload, budget, validate, timeout=15):
     except (OSError, ValueError, TypeError, KeyError, sqlite3.Error):
         # Failed or unknown requests are not free. Never log keys or provider bodies.
         raise ValueError("Remote request failed; original local context retained") from None
+    finally:
+        if not recorded:
+            meter.remote_event(store, "failed")

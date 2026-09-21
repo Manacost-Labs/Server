@@ -14,10 +14,14 @@ from context_economy import (
     advisor,
     ai_memory,
     assist,
+    briefs,
+    focus,
     memory,
+    meter,
     output,
     packing,
     pilot,
+    repetition,
     reporting,
     typesafe,
 )
@@ -63,6 +67,8 @@ def parser():
     gate = commands.add_parser("gate", help="Run an explicit command; archive exact output and return its exit code")
     gate.add_argument("--timeout", type=float, default=120)
     gate.add_argument("--preview-chars", type=int, default=4000)
+    gate.add_argument("--hypothesis", default="", help="New failure hypothesis; stored only as a hash")
+    gate.add_argument("--watch-source", action="append", default=[], help="Selected input version for repetition hints")
     gate.add_argument("argv", nargs=argparse.REMAINDER)
 
     record = commands.add_parser("record", help="Record measured usage for one attempt; absent fields stay unknown")
@@ -73,6 +79,7 @@ def parser():
     helper.add_argument("--task", required=True)
     helper.add_argument("--source", action="append", required=True)
     helper.add_argument("--required", action="append", default=[])
+    helper.add_argument("--facts", help="Project-relative JSON of required exact {source,quote} facts")
     helper.add_argument("--purpose", choices=assist.PURPOSES, default="context")
     helper.add_argument("--provider", choices=("jev", "gemma", "cascade"), default="jev")
     helper.add_argument("--mode", choices=("shadow", "active"), default="shadow")
@@ -92,8 +99,33 @@ def parser():
     advice.add_argument("--api-timeout", type=float, default=15)
     outcome = commands.add_parser("pilot-record", help="Record one final outcome including retries and preparation")
     outcome.add_argument("--file", required=True)
+    outcome.add_argument("--meter-task", help="Fill missing measurements from a finished local task interval")
     comparison = commands.add_parser("pilot-report", help="Compare explicitly recorded outcomes; real tasks by default")
     comparison.add_argument("--dataset", choices=("real", "synthetic"), default="real")
+    for name in ("meter-start", "meter-snapshot", "meter-finish", "meter-cancel"):
+        measure = commands.add_parser(name, help="Measure one explicit session interval locally")
+        measure.add_argument("--task-id", required=True)
+        if name == "meter-start":
+            measure.add_argument("--session", required=True, type=Path, help="Exact local Codex JSONL session path")
+    read = commands.add_parser("read", help="Read a bounded source and hint about repeated unchanged reads")
+    read.add_argument("--source", required=True)
+    read.add_argument("--hypothesis", default="")
+    read.add_argument("--budget", type=int, default=2000)
+    brief = commands.add_parser("brief", help="Reusable per-source reference drafts with a versioned file cache")
+    brief.add_argument("--source", action="append", required=True)
+    brief.add_argument("--purpose", choices=("context", "memory", "documentation"), default="context")
+    brief.add_argument("--preview-remote", action="store_true")
+    brief.add_argument("--allow-remote", action="store_true")
+    brief.add_argument("--daily-budget-usd", type=float, default=0)
+    brief.add_argument("--api-timeout", type=float, default=15)
+    brief.add_argument("--budget", type=int, default=12000)
+    focused = commands.add_parser("focus", help="Build a bounded packet using Probe on selected code/test paths")
+    focused.add_argument("--task", required=True)
+    focused.add_argument("--source", action="append", required=True, help="Changed function fragment, pinned verbatim")
+    focused.add_argument("--search-in", action="append", required=True, help="Narrow code/test directory or file")
+    focused.add_argument("--required", action="append", default=[])
+    focused.add_argument("--query", help="Optional symbol query; otherwise derive bounded call/definition names")
+    focused.add_argument("--budget", type=int, default=12000)
     return command
 
 
@@ -125,9 +157,32 @@ def main(argv=None):
             elif args.command == "advise":
                 result = advisor.run(store, args)
             elif args.command == "pilot-record":
-                result = pilot.record(store, json.loads(read_source(store.root, args.file)["text"]))
+                value = json.loads(read_source(store.root, args.file)["text"])
+                if args.meter_task:
+                    value = pilot.measured(store, value, args.meter_task)
+                result = pilot.record(store, value)
             elif args.command == "pilot-report":
                 result = pilot.summary(store, args.dataset)
+            elif args.command == "meter-start":
+                result = meter.start(store, args.task_id, args.session)
+            elif args.command in ("meter-snapshot", "meter-finish"):
+                result = meter.report(store, args.task_id, finish=args.command == "meter-finish")
+            elif args.command == "meter-cancel":
+                result = meter.cancel(store, args.task_id)
+            elif args.command == "read":
+                result = read_source(store.root, args.source)
+                if not 100 <= args.budget <= 12000 or packing.estimate(encode(result)) + 200 > args.budget:
+                    raise ValueError("Read exceeds budget; select a narrower line range")
+                result["repetition"] = repetition.observe(store, "read", result["source"], result["sha256"], args.hypothesis)
+                meter.event(store, "read", {"bytes": len(result["text"].encode())})
+            elif args.command == "brief":
+                result = briefs.run(store, args)
+            elif args.command == "focus":
+                result = focus.run(store, args)
+                packet = result.pop("packet")
+                print(encode(result), file=sys.stderr)
+                print(encode(packet))
+                return 0
             elif args.command == "remember":
                 result = {"id": memory.add(store, args.text, args.evidence, args.source, args.ttl_days)}
                 result["storage"] = ai_memory.mirror(store, result["id"])
@@ -161,7 +216,7 @@ def main(argv=None):
                 return 0
             elif args.command == "gate":
                 command = args.argv[1:] if args.argv[:1] == ["--"] else args.argv
-                result = output.run(store, command, args.timeout, args.preview_chars)
+                result = output.run(store, command, args.timeout, args.preview_chars, args.hypothesis, args.watch_source)
                 print(encode(result))
                 return result["exit_code"]
             elif args.command == "record":

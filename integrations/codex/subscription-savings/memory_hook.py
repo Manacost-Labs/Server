@@ -26,7 +26,8 @@ def hint(payload, config):
         "for context, memory and documentation drafts. Preview first; paid use requires "
         "authorized data and --allow-remote --daily-budget-usd 1. Shadow mode is default."
         " Authorized task-level advise recommends model/review without switching; "
-        "pilot-record/pilot-report track outcomes. See the context-economy skill."
+        "pilot-record/pilot-report track outcomes. Task metering, critical facts, file briefs, "
+        "Probe focus and repetition hints are available on demand; see the context-economy skill."
     )
     return {"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": text}}
 

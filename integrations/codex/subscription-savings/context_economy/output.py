@@ -6,15 +6,21 @@ import re
 import signal
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 
-from .common import private_dir
+from . import meter, repetition
+from .common import digest, encode, private_dir, read_source
 
 
-def run(store, argv, timeout=120, preview_chars=4000):
+def run(store, argv, timeout=120, preview_chars=4000, hypothesis="", watch_sources=()):
     if not argv or not 0 < timeout <= 3600 or not 200 <= preview_chars <= 16000:
         raise ValueError("Provide a command, a timeout up to 3600s and a preview of 200–16000 characters")
     directory = private_dir(store.directory / "logs")
+    if len(hypothesis) > 1000 or len(watch_sources) > 12:
+        raise ValueError("Bound hypothesis to 1000 characters and watched sources to 12")
+    versions = [(s, read_source(store.root, s)["sha256"]) for s in watch_sources]
+    started = time.monotonic()
     fd, filename = tempfile.mkstemp(prefix="command-", suffix=".log", dir=directory)
     timed_out = False
     with os.fdopen(fd, "wb") as stream:
@@ -50,7 +56,12 @@ def run(store, argv, timeout=120, preview_chars=4000):
     tail_budget = available - head_budget - diagnostic_budget
     preview = ("HEAD\n" + "".join(head)[:head_budget] + "\nDIAGNOSTIC SAMPLE\n"
                + "".join(errors)[:diagnostic_budget] + "\nTAIL\n" + "".join(tail)[-tail_budget:])
-    return {"exit_code": code, "timed_out": timed_out, "log": filename,
+    meter.event(store, "command", {"exit_code": code, "elapsed_seconds": time.monotonic() - started})
+    repeat = None
+    if code:
+        repeat = repetition.observe(store, "failure", digest(encode(argv).encode()),
+                                    digest(encode([code, errors or list(tail), versions]).encode()), hypothesis)
+    return {"exit_code": code, "timed_out": timed_out, "log": filename, "repetition": repeat,
             "bytes": path.stat().st_size, "preview": preview,
             "notice": "Bounded heuristic sample, not a complete error summary. "
                       "Full combined stdout/stderr is in the local log; inspect it when needed."}

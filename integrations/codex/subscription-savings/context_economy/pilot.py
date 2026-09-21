@@ -4,11 +4,41 @@ import json
 import math
 import sqlite3
 
-from . import advisor
+from . import advisor, meter
 from .common import encode
 
 METRICS = ("elapsed_seconds", "input_tokens", "output_tokens", "cached_input_tokens",
            "reasoning_tokens", "api_cost_usd", "codex_credits")
+
+
+def measured(store, value, identifier):
+    if not isinstance(value, dict):
+        raise ValueError("Outcome must be an object")
+    if not isinstance(value.get("evidence"), str) or not value["evidence"].strip():
+        raise ValueError("Measured outcomes still require explicit verification evidence")
+    report = meter.report(store, identifier)
+    if report["active"] or report["cancelled"]:
+        raise ValueError("Use a finished, non-cancelled interval for a final outcome")
+    value = dict(value)
+    for field in METRICS:
+        if value.get(field) is None:
+            value[field] = report.get(field)
+    settings = report["model_settings"]
+    models = {s.get("model") for s in settings if s.get("model")}
+    if len(models) > 1:
+        raise ValueError("Mixed Codex models in this interval; measure separate phases or use per-attempt reporting")
+    if len(models) == 1:
+        model = next(iter(models)).split("-")[-1]
+        if model in advisor.MODELS:
+            if value.get("model") is not None and value["model"] != model:
+                raise ValueError("Outcome model disagrees with the observed session model")
+            value.setdefault("model", model)
+    efforts = {s.get("effort") for s in settings if s.get("effort")}
+    speeds = {s.get("speed") for s in settings if s.get("speed")}
+    value.setdefault("effort", next(iter(efforts)) if len(efforts) == 1 else "unknown")
+    value.setdefault("speed", next(iter(speeds)) if len(speeds) == 1 else "unknown")
+    value["evidence"] = str(value.get("evidence", "")) + " [Meter: latest reported counters; may lag the final turn.]"
+    return value
 
 
 def table(store):

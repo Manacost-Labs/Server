@@ -1,0 +1,7 @@
+id: integrations/codex/context-economy
+name: codex-context-economy
+description: Opt-in local context preparation and measurement for Codex.
+provenance:
+  kind: first-party
+  repository: https://github.com/Manacost-Labs/skills
+installation: optional-integration-symlink

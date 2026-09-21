@@ -1,0 +1,19 @@
+{
+  "attempt_id": "replace-with-unique-attempt-id",
+  "task_id": "replace-with-task-id",
+  "dataset": "project-revision-and-pilot-version",
+  "variant": "local",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "speed": "standard",
+  "success": false,
+  "elapsed_seconds": null,
+  "input_tokens": null,
+  "cached_input_tokens": null,
+  "output_tokens": null,
+  "reasoning_tokens": null,
+  "api_cost_usd": null,
+  "typesafe_cost_usd": null,
+  "tool_calls": null,
+  "notes": "Template only. Replace with observed measurements; do not record as a real run."
+}

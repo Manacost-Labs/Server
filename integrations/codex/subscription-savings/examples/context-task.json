@@ -1,0 +1,11 @@
+{
+  "goal": "Explain how the selected context tools preserve evidence while reducing repeated input.",
+  "criteria": [
+    "Describe stale-note invalidation and mandatory-context handling.",
+    "Distinguish estimated tokens, API costs and subscription allowance."
+  ],
+  "constraints": [
+    "Read-only analysis; no deployment or live configuration changes.",
+    "Use the selected sources and request specific additional evidence if needed."
+  ]
+}

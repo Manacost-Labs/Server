@@ -1,0 +1,23 @@
+# Explicit MCP allowlist. Other tools: local shell/search; skills load on demand.
+# TypeUI is an on-demand skill; no MCP is required by this profile.
+
+[mcp_servers.codegraph]
+enabled = false
+
+[mcp_servers.chrome-devtools]
+enabled = false
+
+[mcp_servers.context7]
+enabled = false
+
+[mcp_servers.openaiDeveloperDocs]
+enabled = false
+
+[mcp_servers.github]
+enabled = false
+
+[mcp_servers.cloudflare]
+enabled = false
+
+[mcp_servers.ovhcloud]
+enabled = false

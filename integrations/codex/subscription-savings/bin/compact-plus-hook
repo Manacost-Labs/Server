@@ -1,28 +1,4 @@
 #!/usr/bin/env bash
-# Keep compact-plus summaries cheap and bounded. This wrapper stays outside
-# the plugin checkout so plugin updates cannot restore expensive defaults.
-set -euo pipefail
-
-hook_name=${1:?hook name is required}
-shift
-
-codex_home=${CODEX_HOME:-"${HOME}/.codex"}
-plugin_root=${COMPACT_PLUS_PLUGIN_ROOT:-"${codex_home}/plugins/compact-plus"}
-hook_path=${plugin_root}/hooks/${hook_name}
-[[ -f $hook_path ]] || {
-  printf 'compact-plus-hook: hook not found: %s\n' "$hook_path" >&2
-  exit 127
-}
-
-# shellcheck disable=SC2016 # Expanded later by compact-plus, not this wrapper.
-export COMPACT_PLUS_PRIMARY_BACKEND='tmp=$(mktemp "${TMPDIR:-/tmp}/compact-plus-luna.XXXXXX"); { printf "%s\n\n" "$SYSTEM_PROMPT"; cat; } | codex exec -c '\''model_reasoning_effort="medium"'\'' --model gpt-5.6-luna --sandbox read-only --skip-git-repo-check --ignore-user-config --ephemeral --output-last-message "$tmp" - >/dev/null && cat "$tmp"; status=$?; rm -f "$tmp"; exit "$status"'
-export COMPACT_PLUS_FALLBACK_BACKEND=""
-export COMPACT_PLUS_CODEX_WARN_THRESHOLD=65
-export COMPACT_PLUS_MAX_OUTPUT_TOKENS=1200
-export COMPACT_PLUS_BACKEND_TIMEOUT=45
-export COMPACT_PLUS_SQUASH_ENABLED=1
-export COMPACT_PLUS_SQUASH_READ_LINES=80
-export COMPACT_PLUS_SQUASH_BASH_CHARS=800
-export COMPACT_PLUS_TWO_PASS=0
-
-exec bash "$hook_path" "$@"
+# Optional compaction must never block the parent task.
+root=$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")
+python3 "$root/compaction_guard.py" "$@" || exit 0

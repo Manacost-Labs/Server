@@ -1,14 +1,14 @@
 """Deterministic context packing; required instructions are never truncated."""
 
-import math
 from pathlib import Path
+
+from token_budget import estimate_text
 
 from .common import encode, read_source
 
 
 def estimate(text):
-    # Deliberately labelled a heuristic, not model tokens or subscription usage.
-    return math.ceil(len(text.encode("utf-8")) / 3)
+    return estimate_text(text)["estimated_tokens"]
 
 
 def build(root, task, sources, required, notes, budget=12000):
@@ -58,4 +58,4 @@ def build(root, task, sources, required, notes, budget=12000):
     if estimate(text) > budget:
         raise ValueError("Pack reaches budget boundary; increase budget slightly")
     return {"text": text, "omitted": document["omitted"], "estimated_tokens": estimate(text),
-            "estimator": "ceil(UTF-8 bytes / 3); not billing tokens"}
+            "estimator": "UTF-8 bytes + 15% conservative estimate; not observed Codex tokens"}

@@ -92,11 +92,11 @@ class EconomyTests(unittest.TestCase):
         (self.root / "large.txt").write_text("optional content\n" * 1000)
         task = {"goal": "Fix cookie handling", "criteria": ["Tests pass"],
                 "constraints": ["No deployment"]}
-        result = packing.build(self.root, task, ["large.txt"], ["AGENTS.md"], [], 500)
+        result = packing.build(self.root, task, ["large.txt"], ["AGENTS.md"], [], 1800)
         self.assertIn("No deployment", result["text"])
         self.assertIn("Preserve user files.", result["text"])
         self.assertEqual(["large.txt"], result["omitted"])
-        self.assertLessEqual(result["estimated_tokens"], 500)
+        self.assertLessEqual(result["estimated_tokens"], 1800)
         with self.assertRaises(ValueError):
             packing.build(self.root, task, [], ["large.txt"], [], 100)
 

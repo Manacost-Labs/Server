@@ -2,58 +2,202 @@
   "version": 1,
   "checks": [
     {
-      "id": "model-routing-policy",
-      "argv": ["python3", "-B", "scripts/model_routing.py", "--validate-policy"],
+      "id": "permanent-context-size",
+      "argv": [
+        "python3",
+        "scripts/check_context_size.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["focused"]
+      "covers": [
+        "lint"
+      ]
+    },
+    {
+      "id": "codex-setup-e2e",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_codex_setup_e2e.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit"
+      ]
+    },
+    {
+      "id": "model-routing-policy",
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/model_routing.py",
+        "--validate-policy"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "focused"
+      ]
     },
     {
       "id": "model-routing-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_model_routing.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_model_routing.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit"]
+      "covers": [
+        "unit"
+      ]
     },
     {
       "id": "dispatch-launcher-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_dispatch_launcher.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_dispatch_launcher.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit", "security"]
+      "covers": [
+        "unit",
+        "security"
+      ]
     },
     {
       "id": "observation-pack-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_observation_pack.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_observation_pack.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit", "security"]
+      "covers": [
+        "unit",
+        "security"
+      ]
     },
     {
       "id": "context-economy-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_context_economy.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_context_economy.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit", "integration", "security"]
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
     },
     {
       "id": "ai-memory-adapter-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_ai_memory_adapter.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_ai_memory_adapter.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit", "integration", "security"]
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
     },
     {
       "id": "remote-assist-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_remote_assist.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_remote_assist.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit", "integration", "security"]
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
     },
     {
       "id": "advisory-pilot-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_advisor.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_advisor.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit", "integration", "security"]
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
     },
     {
       "id": "economy-five-regressions",
-      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_economy_five.py"],
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_economy_five.py"
+      ],
       "min_risk": "LOW",
-      "covers": ["unit", "integration", "security"]
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
     },
     {
       "id": "policy",
@@ -175,7 +319,13 @@
         "tests/test_engineering.py",
         "tests/test_changed_secrets.py",
         "tests/test_scope_guard.py",
-        "tests/test_observation_pack.py"
+        "tests/test_observation_pack.py",
+        "scripts/check_context_size.py",
+        "tests/test_codex_setup_e2e.py",
+        "integrations/codex/subscription-savings/codex_setup.py",
+        "integrations/codex/subscription-savings/compaction_guard.py",
+        "integrations/codex/subscription-savings/token_budget.py",
+        "integrations/codex/subscription-savings/benchmark.py"
       ],
       "min_risk": "MEDIUM",
       "covers": [

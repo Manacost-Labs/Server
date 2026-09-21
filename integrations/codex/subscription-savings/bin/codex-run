@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+root=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 
 usage() {
   printf '%s\n' \
@@ -35,12 +36,19 @@ if [[ $model == sol || $model == astra ]]; then
     printf '%s\n' 'codex-run: senior model requires one bounded --package file' >&2
     exit 2
   }
-  context-budget "$package" >/dev/null
+  bash "$root/context-budget" --model "$model_id" "$package" >/dev/null
 fi
 
 profile=${1:-minimal}
 case "$profile" in
-  minimal) shift || true; exec codex -m "$model_id" "$@" ;;
-  code|web|research|github|infra|typeui) shift; exec codex -p "$profile" -m "$model_id" "$@" ;;
+  minimal|code|web|research|github|infra|typeui) shift || true ;;
   *) usage; exit 2 ;;
 esac
+for argument in "$@"; do
+  case "$argument" in
+    -m|--model|--model=*|-m?*)
+      printf '%s\n' 'codex-run: model overrides bypass the manual gate; select the model as the first argument' >&2
+      exit 2 ;;
+  esac
+done
+exec bash "$root/codex-context" "$profile" -m "$model_id" "$@"

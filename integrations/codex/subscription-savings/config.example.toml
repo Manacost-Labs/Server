@@ -1,71 +1,89 @@
-# Replace /ABSOLUTE/PATH/TO/skills with the absolute checkout path.
-# Install the two optional third-party plugins before enabling their blocks.
-# Do not copy hooks.state trust hashes between machines; review hooks with
-# `/hooks` so Codex records trust for the exact local command.
+# Codex CLI 0.153.0 / V2 file profiles. Render only via codex_setup.py.
+# No auth, trust hashes, or live server paths. Review commands locally with /hooks.
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
 
-[[hooks.Stop]]
-matcher = "*"
+[features]
+memories = false
 
-[[hooks.Stop.hooks]]
+[mcp_servers.codegraph]
+command = "codegraph"
+args = ["serve", "--mcp"]
+enabled = false
+[mcp_servers.chrome-devtools]
+command = "chrome-devtools-mcp"
+enabled = false
+[mcp_servers.context7]
+command = "context7-mcp"
+enabled = false
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+enabled = false
+[mcp_servers.github]
+command = "github-mcp-server"
+args = ["stdio"]
+enabled = false
+[mcp_servers.cloudflare]
+url = "https://mcp.cloudflare.com/mcp"
+enabled = false
+[mcp_servers.ovhcloud]
+url = "https://mcp.eu.ovhcloud.com/mcp"
+enabled = false
+
+[[hooks.PostToolUse]]
+matcher = ".*"
+[[hooks.PostToolUse.hooks]]
 type = "command"
-command = "node /ABSOLUTE/PATH/TO/codex-usage-monitor/bin/on-stop.js"
-timeout = 30
-
-[[hooks.UserPromptSubmit]]
-matcher = "*"
-
-[[hooks.UserPromptSubmit.hooks]]
-type = "command"
-command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook userpromptsubmit-compaction-recovery.sh"
+command = "@OBSERVATION_COMMAND@"
 timeout = 5
-
-[[hooks.UserPromptSubmit.hooks]]
-type = "command"
-command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook userpromptsubmit-compact-plus-reminder.sh"
-timeout = 3
 
 [[hooks.PreCompact]]
 matcher = "*"
-
 [[hooks.PreCompact.hooks]]
 type = "command"
-command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook precompact-transcript-backup.sh"
+command = "@precompact-transcript-backup.sh@"
 timeout = 30
 
+[[hooks.PreCompact]]
+matcher = "*"
 [[hooks.PreCompact.hooks]]
 type = "command"
-command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook precompact-state-summary.sh"
+command = "@COMPACTION_COMMAND@"
 timeout = 120
+
+[[hooks.UserPromptSubmit]]
+matcher = "*"
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = "@userpromptsubmit-compaction-recovery.sh@"
+timeout = 5
+
+[[hooks.UserPromptSubmit]]
+matcher = "*"
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = "@userpromptsubmit-compact-plus-reminder.sh@"
+timeout = 3
 
 [[hooks.PostCompact]]
 matcher = "*"
-
 [[hooks.PostCompact.hooks]]
 type = "command"
-command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook compaction-recovery.sh"
+command = "@compaction-recovery.sh@"
 timeout = 5
 
 [[hooks.SessionStart]]
 matcher = "compact"
-
 [[hooks.SessionStart.hooks]]
 type = "command"
-command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook sessionstart-compaction-recovery.sh"
+command = "@sessionstart-compaction-recovery.sh@"
 timeout = 5
 
 [[hooks.SessionStart]]
 matcher = "*"
-
 [[hooks.SessionStart.hooks]]
 type = "command"
-command = "bash /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/bin/compact-plus-hook sessionstart-export-session-id.sh"
+command = "@sessionstart-export-session-id.sh@"
 timeout = 3
-
-[[hooks.PostToolUse]]
-matcher = ".*"
-
-[[hooks.PostToolUse.hooks]]
-type = "command"
-command = "/usr/bin/python3 /ABSOLUTE/PATH/TO/skills/integrations/codex/subscription-savings/observation_pack.py"
-timeout = 5
-statusMessage = "Packing oversized tool output"

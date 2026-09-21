@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "variant": "baseline",
+  "dataset": "real",
+  "measurement": "unknown",
+  "case_id": "REPLACE",
+  "task": "REPLACE with exact task",
+  "source_repository": "REPLACE",
+  "source_commit": "REPLACE with full starting commit",
+  "model": "unknown",
+  "reasoning_effort": "unknown",
+  "speed": "unknown",
+  "evidence": "",
+  "tests": {
+    "passed": null,
+    "command": "",
+    "evidence": ""
+  },
+  "quality": {
+    "accepted": null,
+    "criteria": "",
+    "rework_notes": ""
+  },
+  "input_tokens": null,
+  "cached_input_tokens": null,
+  "output_tokens": null,
+  "reasoning_tokens": null,
+  "model_launches": null,
+  "retries": null,
+  "rework_count": null,
+  "auxiliary_api_cost_usd": null,
+  "elapsed_seconds": null
+}

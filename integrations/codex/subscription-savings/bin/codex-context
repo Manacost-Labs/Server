@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-usage() {
-  printf '%s\n' 'Usage: codex-context {minimal|code|web|research|github|infra|typeui} [codex arguments...]' >&2
-}
-
-profile=${1:-}
-case "$profile" in
-  minimal) shift; exec codex "$@" ;;
-  code|web|research|github|infra|typeui) shift; exec codex -p "$profile" "$@" ;;
-  *) usage; exit 2 ;;
-esac
+root=$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")
+exec python3 "$root/codex_setup.py" launch "$@"

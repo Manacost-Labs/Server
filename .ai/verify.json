@@ -44,6 +44,12 @@
       "covers": ["unit", "integration", "security"]
     },
     {
+      "id": "advisory-pilot-regressions",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_advisor.py"],
+      "min_risk": "LOW",
+      "covers": ["unit", "integration", "security"]
+    },
+    {
       "id": "policy",
       "argv": [
         "python3",
@@ -156,6 +162,7 @@
         "tests/test_context_economy.py",
         "tests/test_ai_memory_adapter.py",
         "tests/test_remote_assist.py",
+        "tests/test_advisor.py",
         "integrations/codex/subscription-savings/memory_hook.py",
         "integrations/codex/subscription-savings/serve_ai_memory.py",
         "tests/test_engineering.py",

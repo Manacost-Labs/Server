@@ -25,6 +25,8 @@ def hint(payload, config):
         " For bulky selected files, context-economy assist supports JEV/Gemma via OpenRouter "
         "for context, memory and documentation drafts. Preview first; paid use requires "
         "authorized data and --allow-remote --daily-budget-usd 1. Shadow mode is default."
+        " Authorized task-level advise recommends model/review without switching; "
+        "pilot-record/pilot-report track outcomes. See the context-economy skill."
     )
     return {"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": text}}
 

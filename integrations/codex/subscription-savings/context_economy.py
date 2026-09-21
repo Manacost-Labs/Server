@@ -11,11 +11,13 @@ import uuid
 from pathlib import Path
 
 from context_economy import (
+    advisor,
     ai_memory,
     assist,
     memory,
     output,
     packing,
+    pilot,
     reporting,
     typesafe,
 )
@@ -79,6 +81,19 @@ def parser():
     helper.add_argument("--daily-budget-usd", type=float, default=0)
     helper.add_argument("--api-timeout", type=float, default=15)
     helper.add_argument("--budget", type=int, default=12000)
+    advice = commands.add_parser("advise", help="Recommend a model/review checkpoint without switching models")
+    advice.add_argument("--task", required=True)
+    advice.add_argument("--category", choices=advisor.CATEGORIES, required=True)
+    advice.add_argument("--risk", choices=advisor.RISKS, default="medium")
+    advice.add_argument("--selected-model", choices=advisor.MODELS, required=True)
+    advice.add_argument("--preview-remote", action="store_true")
+    advice.add_argument("--allow-remote", action="store_true")
+    advice.add_argument("--daily-budget-usd", type=float, default=0)
+    advice.add_argument("--api-timeout", type=float, default=15)
+    outcome = commands.add_parser("pilot-record", help="Record one final outcome including retries and preparation")
+    outcome.add_argument("--file", required=True)
+    comparison = commands.add_parser("pilot-report", help="Compare explicitly recorded outcomes; real tasks by default")
+    comparison.add_argument("--dataset", choices=("real", "synthetic"), default="real")
     return command
 
 
@@ -107,6 +122,12 @@ def main(argv=None):
                               "budget_24h": result.get("budget_24h"), "sizes": result.get("sizes")}), file=sys.stderr)
                 print(encode(packet))
                 return 0
+            elif args.command == "advise":
+                result = advisor.run(store, args)
+            elif args.command == "pilot-record":
+                result = pilot.record(store, json.loads(read_source(store.root, args.file)["text"]))
+            elif args.command == "pilot-report":
+                result = pilot.summary(store, args.dataset)
             elif args.command == "remember":
                 result = {"id": memory.add(store, args.text, args.evidence, args.source, args.ttl_days)}
                 result["storage"] = ai_memory.mirror(store, result["id"])

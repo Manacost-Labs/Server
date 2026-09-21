@@ -111,7 +111,8 @@ def request(store, ledger, provider, payload, budget, validate, timeout=15):
     if row:
         try:
             response = json.loads(row[0])
-            return validate(response), {"provider": provider, "status": "cache", "usage": response.get("usage")}
+            return validate(response), {"provider": provider, "status": "cache", "usage": response.get("usage"),
+                                        "request_cost_usd": 0}
         except (ValueError, TypeError, KeyError):
             pass
     key = api_key()  # Missing credentials cannot spend a reservation.
@@ -123,7 +124,11 @@ def request(store, ledger, provider, payload, budget, validate, timeout=15):
         with store.db:
             store.db.execute("INSERT OR REPLACE INTO assistant_cache VALUES (?,?,?)",
                              (fingerprint, time.time(), encode(response)))
-        return result, {"provider": provider, "status": "remote", "usage": response.get("usage")}
+        usage = response.get("usage")
+        cost = usage.get("cost") if isinstance(usage, dict) else None
+        if type(cost) not in (int, float) or not math.isfinite(cost) or cost < 0:
+            cost = None
+        return result, {"provider": provider, "status": "remote", "usage": usage, "request_cost_usd": cost}
     except (OSError, ValueError, TypeError, KeyError, sqlite3.Error):
         # Failed or unknown requests are not free. Never log keys or provider bodies.
         raise ValueError("Remote request failed; original local context retained") from None

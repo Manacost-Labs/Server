@@ -42,6 +42,18 @@ do not copy this directory alone.
   the report fields needed to judge the result. Do not load both full packets.
   Memory and documentation outputs remain drafts until independently checked.
   See `REMOTE-ASSIST.md`; do not switch the user's model or compact their history.
+- During an authorized advisory pilot, use `advise --task task.json --category
+  implementation --risk medium --selected-model terra` once per bounded task,
+  substituting the actual category, risk and selected model. Local by default;
+  `--preview-remote` shows the exact 8 KB maximum task-only state. Authorized JEV
+  use adds `--allow-remote --daily-budget-usd 1`, sharing the assist budget/cache.
+  Treat recommendations as triage, never permission to switch models, skip
+  required review, or certify correctness. Keep Sol/Astra selection explicit.
+- Record final pilot outcomes with `pilot-record --file outcome.json`; use
+  `pilot-report` for real tasks (synthetic checks are separate). Include retries,
+  preparation and review in measurements; use null for unavailable metrics.
+  Repeated turns are not new tasks. Do not run an extra baseline merely to fill
+  the dataset. See `ADVISORY-PILOT.md` for fields and comparison limits.
 
 Use `--help` for exact parameters. Measurements go through `record --file` and
 `report --end-to-end`; count preparation and failed attempts. Missing usage is

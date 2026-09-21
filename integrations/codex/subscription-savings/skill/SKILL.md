@@ -32,6 +32,16 @@ do not copy this directory alone.
   retrieval quality; confidence is not a correctness guarantee.
 - Keep the selected model and current task unless the user requests a change.
   `pack` does not start Astra, alter reasoning effort, or replace Codex compaction.
+- For bulky explicit sources use `assist --task task.json --source path:start:end
+  --purpose context|memory|documentation|review --provider jev|gemma|cascade`.
+  Start with `--preview-remote`; no request is sent. Within authorized data and
+  spend, add `--allow-remote --daily-budget-usd 1`. Both models use OpenRouter;
+  shadow is the default. Only `--mode active` substitutes the validated draft.
+  Mandatory instructions stay verbatim. Stdout is the packet; stderr points
+  to a private report with assessments, candidate packet and usage. Read only
+  the report fields needed to judge the result. Do not load both full packets.
+  Memory and documentation outputs remain drafts until independently checked.
+  See `REMOTE-ASSIST.md`; do not switch the user's model or compact their history.
 
 Use `--help` for exact parameters. Measurements go through `record --file` and
 `report --end-to-end`; count preparation and failed attempts. Missing usage is

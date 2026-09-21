@@ -7,9 +7,18 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import uuid
 from pathlib import Path
 
-from context_economy import ai_memory, memory, output, packing, reporting, typesafe
+from context_economy import (
+    ai_memory,
+    assist,
+    memory,
+    output,
+    packing,
+    reporting,
+    typesafe,
+)
 from context_economy.common import Store, encode, read_source
 
 
@@ -58,6 +67,18 @@ def parser():
     record.add_argument("--file", required=True, help="Project-relative measurement JSON")
     report = commands.add_parser("report", help="Group measured attempts by dataset, variant and model settings")
     report.add_argument("--end-to-end", action="store_true", help="Include preparation across all models per dataset/variant")
+    helper = commands.add_parser("assist", help="Prepare cited evidence with optional JEV/Gemma via OpenRouter")
+    helper.add_argument("--task", required=True)
+    helper.add_argument("--source", action="append", required=True)
+    helper.add_argument("--required", action="append", default=[])
+    helper.add_argument("--purpose", choices=assist.PURPOSES, default="context")
+    helper.add_argument("--provider", choices=("jev", "gemma", "cascade"), default="jev")
+    helper.add_argument("--mode", choices=("shadow", "active"), default="shadow")
+    helper.add_argument("--preview-remote", action="store_true")
+    helper.add_argument("--allow-remote", action="store_true")
+    helper.add_argument("--daily-budget-usd", type=float, default=0)
+    helper.add_argument("--api-timeout", type=float, default=15)
+    helper.add_argument("--budget", type=int, default=12000)
     return command
 
 
@@ -72,7 +93,21 @@ def main(argv=None):
     args = parser().parse_args(argv)
     try:
         with Store(args.project, args.state_dir) as store:
-            if args.command == "remember":
+            if args.command == "assist":
+                result = assist.run(store, args)
+                if args.preview_remote:
+                    print(encode(result))
+                    return 0
+                packet = result.pop("packet")
+                report_path = store.directory / ("assist-" + uuid.uuid4().hex + ".json")
+                with report_path.open("x", encoding="utf-8") as stream:
+                    report_path.chmod(0o600)
+                    stream.write(encode(result) + "\n")
+                print(encode({"status": result["status"], "report": str(report_path),
+                              "budget_24h": result.get("budget_24h"), "sizes": result.get("sizes")}), file=sys.stderr)
+                print(encode(packet))
+                return 0
+            elif args.command == "remember":
                 result = {"id": memory.add(store, args.text, args.evidence, args.source, args.ttl_days)}
                 result["storage"] = ai_memory.mirror(store, result["id"])
             elif args.command == "inspect":

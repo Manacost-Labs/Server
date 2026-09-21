@@ -2,6 +2,8 @@
 
 Сохранённые [решения об экономии и дешёвых моделях](TOKEN-ECONOMY-DECISIONS.md)
 и [каталог рассмотренных инструментов](TOKEN-ECONOMY-TOOLS.md), 2026-09-21.
+Работающий [OpenRouter assist для JEV и Gemma](REMOTE-ASSIST.md): контекст,
+черновики памяти/документации и вспомогательные оценки выбранных материалов.
 
 Локальная надстройка над существующими RTK, ObservationPack, `context-budget`
 и `codex-context`. Требуется Python 3.10+ с SQLite FTS5, Linux/macOS; для

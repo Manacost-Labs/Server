@@ -38,6 +38,12 @@
       "covers": ["unit", "integration", "security"]
     },
     {
+      "id": "remote-assist-regressions",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_remote_assist.py"],
+      "min_risk": "LOW",
+      "covers": ["unit", "integration", "security"]
+    },
+    {
       "id": "policy",
       "argv": [
         "python3",
@@ -149,6 +155,7 @@
         "integrations/codex/subscription-savings/skill/scripts/context-economy.py",
         "tests/test_context_economy.py",
         "tests/test_ai_memory_adapter.py",
+        "tests/test_remote_assist.py",
         "integrations/codex/subscription-savings/memory_hook.py",
         "integrations/codex/subscription-savings/serve_ai_memory.py",
         "tests/test_engineering.py",

@@ -22,6 +22,9 @@ def hint(payload, config):
         "save a short note with remember --text TEXT --evidence EVIDENCE --source PATH "
         "(repeat --source for dependencies). Never save secrets, raw prompts or tool transcripts. "
         "TypeSafe remains off unless explicitly authorized. No need to capture every turn."
+        " For bulky selected files, context-economy assist supports JEV/Gemma via OpenRouter "
+        "for context, memory and documentation drafts. Preview first; paid use requires "
+        "authorized data and --allow-remote --daily-budget-usd 1. Shadow mode is default."
     )
     return {"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": text}}
 

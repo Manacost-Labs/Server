@@ -128,11 +128,6 @@ def run(store, args):
                 assessments = value
             else:
                 draft = value
-        # Revalidate full source hashes after HTTP latency; never use stale drafts.
-        checked = [*candidates.values(), *original["required_sources"]]
-        if (read_source(store.root, args.task)["sha256"] != task_hash
-                or any(read_source(store.root, s["source"])["sha256"] != s["sha256"] for s in checked)):
-            raise StaleSource("Task or selected source changed; rerun preparation before using the packet")
         packet = copy.deepcopy(original)
         if draft:
             packet["context"] = [{"source": candidates[item["source_id"]]["source"],
@@ -158,12 +153,19 @@ def run(store, args):
         result["candidate_packet"] = packet if args.mode == "shadow" else None
         result["sizes"] = {"local_estimated_tokens": packing.estimate(encode(original)),
                            "candidate_estimated_tokens": packing.estimate(encode(packet))}
-    except StaleSource:
-        raise
     except (OSError, ValueError, TypeError, KeyError):
         result.update(status="fallback", packet=original,
                       reason="Remote preparation unavailable, invalid or stale; local packet retained")
     finally:
         result["budget_24h"] = ledger.summary()
         ledger.close()
+    # Check even after a failed HTTP request: the fallback can also become stale.
+    checked = [*candidates.values(), *original["required_sources"]]
+    try:
+        changed = (read_source(store.root, args.task)["sha256"] != task_hash
+                   or any(read_source(store.root, s["source"])["sha256"] != s["sha256"] for s in checked))
+    except (OSError, ValueError):
+        changed = True
+    if changed:
+        raise StaleSource("Task or selected source changed/unavailable; rerun before using the packet")
     return result

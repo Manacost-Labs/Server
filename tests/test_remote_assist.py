@@ -116,6 +116,16 @@ class RemoteAssistTests(unittest.TestCase):
         finally:
             other.close()
 
+    def test_deleted_source_after_failed_http_cannot_use_stale_fallback(self):
+        def fail(*_):
+            (self.root / "docs.txt").unlink()
+            raise OSError("timeout")
+        with mock.patch.object(remote, "Ledger", return_value=self.ledger), \
+                mock.patch.object(self.ledger, "close"), \
+                mock.patch.object(remote, "api_key", return_value="test"), \
+                mock.patch.object(remote, "send", side_effect=fail), self.assertRaises(assist.StaleSource):
+            assist.run(self.store, self.args)
+
     def test_failed_request_is_reserved_and_not_cached(self):
         with mock.patch.object(remote, "api_key", return_value="test"), \
                 mock.patch.object(remote, "send", side_effect=OSError("private provider error")):

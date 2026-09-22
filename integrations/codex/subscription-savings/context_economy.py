@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -33,6 +34,8 @@ def parser():
     command = argparse.ArgumentParser(description=__doc__)
     command.add_argument("--project", type=Path, default=Path.cwd())
     command.add_argument("--state-dir", type=Path)
+    command.add_argument("--meter-task-id", default=os.environ.get("CODEX_ECONOMY_TASK_ID"),
+                         help="Explicit active task for helper/command attribution; never inferred from the project")
     commands = command.add_subparsers(dest="command", required=True)
 
     prep = commands.add_parser("prompt-brief", help="Prepare an opt-in Gemma extract with the full original prompt")
@@ -118,11 +121,20 @@ def parser():
         measure.add_argument("--task-id", required=True)
         if name == "meter-start":
             measure.add_argument("--session", required=True, type=Path, help="Exact local Codex JSONL session path")
+            measure.add_argument("--from-task-start", action="store_true", help="Attest measurement starts before preparation")
+        if name == "meter-finish":
+            measure.add_argument("--coverage-evidence", default="", help="Evidence all preparation/helpers/compaction are included")
+    attach = commands.add_parser("meter-attach", help="Measure an auxiliary Codex session before its work begins")
+    attach.add_argument("--task-id", required=True)
+    attach.add_argument("--session", required=True, type=Path)
+    attach.add_argument("--role", required=True, choices=("helper", "compaction"))
     read = commands.add_parser("read", help="Read a bounded source and hint about repeated unchanged reads")
     read.add_argument("--source", required=True)
     read.add_argument("--hypothesis", default="")
     read.add_argument("--budget", type=int, default=2000)
     brief = commands.add_parser("brief", help="Reusable per-source reference drafts with a versioned file cache")
+    brief.add_argument("--min-reduction", type=float, default=.15, help="Required complete-packet byte reduction, default 15%%")
+    brief.add_argument("--facts", help="Project-relative JSON listing mandatory exact {source,quote} evidence")
     brief.add_argument("--source", action="append", required=True)
     brief.add_argument("--purpose", choices=("context", "memory", "documentation"), default="context")
     brief.add_argument("--preview-remote", action="store_true")
@@ -151,6 +163,8 @@ def main(argv=None):
     args = parser().parse_args(argv)
     try:
         with Store(args.project, args.state_dir) as store:
+            if args.meter_task_id and not args.command.startswith("meter-"):
+                meter.bind(store, args.meter_task_id)
             if args.command == "prompt-brief":
                 result = prompt_brief.run(store, args)
                 print(encode(result), flush=True)
@@ -179,9 +193,12 @@ def main(argv=None):
             elif args.command == "pilot-report":
                 result = pilot.summary(store, args.dataset)
             elif args.command == "meter-start":
-                result = meter.start(store, args.task_id, args.session)
+                result = meter.start(store, args.task_id, args.session, from_task_start=args.from_task_start)
+            elif args.command == "meter-attach":
+                result = meter.attach(store, args.task_id, args.session, args.role)
             elif args.command in ("meter-snapshot", "meter-finish"):
-                result = meter.report(store, args.task_id, finish=args.command == "meter-finish")
+                result = meter.report(store, args.task_id, finish=args.command == "meter-finish",
+                                      coverage_evidence=getattr(args, "coverage_evidence", ""))
             elif args.command == "meter-cancel":
                 result = meter.cancel(store, args.task_id)
             elif args.command == "read":

@@ -346,7 +346,8 @@
         "integrations/codex/subscription-savings/compaction_guard.py",
         "integrations/codex/subscription-savings/token_budget.py",
         "integrations/codex/subscription-savings/benchmark.py",
-        "tests/test_prompt_brief.py"
+        "tests/test_prompt_brief.py",
+        "tests/test_economy_quality.py"
       ],
       "min_risk": "MEDIUM",
       "covers": [
@@ -393,6 +394,26 @@
       ],
       "min_risk": "LOW",
       "covers": [
+        "security"
+      ]
+    },
+    {
+      "id": "economy-quality-regressions",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_economy_quality.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit",
+        "integration",
         "security"
       ]
     }

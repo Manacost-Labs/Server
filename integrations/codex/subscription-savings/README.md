@@ -374,6 +374,12 @@ JSON
 - [NVIDIA SoL-Pi](https://github.com/NVlabs/SoL-Pi) — исследовательское вдохновение; его код сюда не копировался.
 # Explicit Gemma prompt preparation
 
+For session-isolated measurement, source-packet reduction and real-task acceptance
+criteria, see [the quality pilot v2 guide](benchmark/README.md). Helper attribution
+now requires `--meter-task-id` or `CODEX_ECONOMY_TASK_ID`; the active task is never
+inferred from project activity. Prompt preparation below remains an optional
+clarity aid and is not counted as a demonstrated token-saving mechanism.
+
 Use this for a selected substantial task before launching Codex. It does not
 intercept desktop messages, change the selected model, rewrite project policy,
 or enable a prompt hook. Only the named UTF-8 prompt file is sent to OpenRouter;

@@ -156,18 +156,20 @@ class EconomyFiveTests(unittest.TestCase):
 
     def test_remote_meter_includes_invalid_paid_response_and_cache_is_free(self):
         meter.start(self.store, "task-1", self.session)
+        meter.bind(self.store, "task-1")
         self.helper(briefs.run, self.brief_args())
         self.helper(briefs.run, self.brief_args(), effect=AssertionError("No second request"))
         result = meter.report(self.store, "task-1")
         self.assertEqual(0.00002, result["helper_api_cost_usd"])
         self.assertEqual(1, result["remote_calls"])
         self.assertEqual(1, result["cache_hits"])
-        self.source.write_text("unrelated")
+        self.source.write_text("unrelated\n" * 100)
         self.helper(briefs.run, self.brief_args(source=["service.py"]), response={"usage": {"cost": 0.00003}})
         self.assertEqual(0.00005, meter.report(self.store, "task-1")["helper_api_cost_usd"])
 
     def test_remote_unknown_failure_cost_not_zero(self):
         meter.start(self.store, "task-1", self.session)
+        meter.bind(self.store, "task-1")
         self.helper(briefs.run, self.brief_args(), effect=OSError("offline"))
         self.assertIsNone(meter.report(self.store, "task-1")["helper_api_cost_usd"])
 
@@ -234,10 +236,10 @@ class EconomyFiveTests(unittest.TestCase):
             self.assertIsNotNone(local["references"][0]["original"])
 
     def test_brief_unchanged_file_remains_cached_when_other_file_changes(self):
-        (self.root / "other.txt").write_text("Readiness needs a healthy worker.\n")
+        (self.root / "other.txt").write_text("Readiness needs a healthy worker.\n" + "History.\n" * 100)
         args = self.brief_args(source=["docs.txt", "other.txt"])
         self.helper(briefs.run, args)
-        (self.root / "other.txt").write_text("Readiness needs a healthy worker.\nUpdated.\n")
+        (self.root / "other.txt").write_text("Readiness needs a healthy worker.\n" + "Updated.\n" * 100)
         result = self.helper(briefs.run, args)
         self.assertEqual(["file_cache", "remote"], [r["usage"]["status"] for r in result["references"]])
 
@@ -266,6 +268,7 @@ class EconomyFiveTests(unittest.TestCase):
         self.assertIsNone(repetition.observe(self.store, "read", "service.py:1:2", "version-2"))
         self.assertIsNone(repetition.observe(self.store, "read", "service.py:1:2", "version-1", "new evidence"))
         meter.start(self.store, "new-task", self.session)
+        meter.bind(self.store, "new-task")
         self.assertIsNone(repetition.observe(self.store, "read", "service.py:1:2", "version-1"))
 
     def test_gate_repeats_do_not_suppress_command_or_exit_code(self):

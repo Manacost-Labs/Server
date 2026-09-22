@@ -1,10 +1,11 @@
 """Reusable, source-versioned reference drafts; independent of a caller's task."""
 
 import json
+import math
 import time
 from pathlib import Path
 
-from . import assist, meter, packing, remote
+from . import assist, facts, meter, packing, remote
 from .common import digest, encode, read_source
 
 
@@ -13,6 +14,9 @@ def run(store, args):
         raise ValueError("Choose 1–6 sources and a reference purpose")
     if not 100 <= args.budget <= 12000:
         raise ValueError("Brief output budget must be in [100,12000]")
+    minimum = getattr(args, "min_reduction", .15)
+    if not math.isfinite(minimum) or not .05 <= minimum <= .9:
+        raise ValueError("Minimum complete-packet reduction must be in [0.05,0.9]")
     if args.allow_remote and (not 0 < args.daily_budget_usd <= 1 or not 0 < args.api_timeout <= 30):
         raise ValueError("Brief requires a budget in (0,$1] and timeout in (0,30]")
     sources = [read_source(store.root, s) for s in dict.fromkeys(args.source)]
@@ -20,6 +24,9 @@ def run(store, args):
         raise ValueError("Instruction files must remain verbatim; use pack --required")
     if sum(len(s["text"].encode()) for s in sources) > 24000:
         raise ValueError("Selected brief inputs exceed 24 KB; narrow fragments")
+    critical, critical_source = facts.load(store.root, getattr(args, "facts", None),
+                                           {str(i): s for i, s in enumerate(sources)},
+                                           {"context": sources, "required_sources": []})
     requests = []
     for source in sources:
         state = {"task": {"goal": "Prepare a reusable source reference, not an answer to a particular task",
@@ -43,7 +50,8 @@ def run(store, args):
             row = store.db.execute("SELECT body FROM file_briefs WHERE id=? AND created>?",
                                    (key, time.time() - 30 * 86400)).fetchone()
             draft = None
-            usage = {"status": "local", "request_cost_usd": 0}
+            small = len(source["text"].encode()) < 600
+            usage = {"status": "skipped-small-source" if small else "local", "request_cost_usd": 0}
             if row:
                 try:
                     # Revalidate exact evidence against the current source even on cache hits.
@@ -53,7 +61,7 @@ def run(store, args):
                     meter.remote_event(store, "cache")
                 except (ValueError, TypeError, KeyError):
                     pass
-            if draft is None and args.allow_remote:
+            if draft is None and args.allow_remote and not small:
                 ledger = ledger or remote.Ledger()
                 validated_response = []
 
@@ -71,6 +79,10 @@ def run(store, args):
                                          (key, time.time(), encode(validated_response[-1])))
                 except (OSError, ValueError, TypeError, KeyError):
                     usage = {"status": "fallback", "request_cost_usd": None}
+            # Omitted mandatory evidence restores this entire original fragment.
+            if draft and any(f["source"] == source["source"] and
+                             not any(f["quote"] in item["quote"] for item in draft["items"]) for f in critical):
+                draft = None
             results.append({"source": source["source"], "sha256": source["sha256"], "usage": usage,
                             "draft": draft, "original": source["text"] if draft is None else None})
     finally:
@@ -78,9 +90,17 @@ def run(store, args):
             ledger.close()
     if any(read_source(store.root, s["source"])["sha256"] != s["sha256"] for s in sources):
         raise ValueError("Brief source changed; rerun before using the result")
+    if critical_source and read_source(store.root, critical_source["source"])["sha256"] != critical_source["sha256"]:
+        raise ValueError("Critical evidence changed; rerun")
     result = {"purpose": args.purpose, "references": results,
+              "reduction": {"applied": True, "minimum_fraction": minimum, "basis": "complete-packet-utf8-bytes"},
               "notice": "Reusable reference drafts, not verified memory or task-specific answers. "
                         "Check applicability and critical facts; open original sources when uncertain."}
+    original = dict(result, references=[dict(r, draft=None, original=s["text"]) for r, s in zip(results, sources)],
+                    reduction=dict(result["reduction"], applied=False))
+    if (not any(r["draft"] for r in results) or
+            len(encode(result).encode()) > len(encode(original).encode()) * (1 - minimum)):
+        result = original
     if packing.estimate(encode(result)) > args.budget:
         raise ValueError("Brief output exceeds budget; narrow sources or increase the output budget")
     return result

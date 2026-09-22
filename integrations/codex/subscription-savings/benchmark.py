@@ -4,6 +4,7 @@ import json
 import math
 import re
 import statistics
+from fractions import Fraction
 from pathlib import Path
 
 COUNTERS = ("input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "model_launches",
@@ -119,7 +120,8 @@ def assess(pairs):
             excluded.append({"case_id": baseline["case_id"], "reason": reason})
         else:
             eligible.append((baseline, economy))
-    reductions = [1 - (e["input_tokens"] + e["output_tokens"]) / (b["input_tokens"] + b["output_tokens"])
+    reductions = [Fraction(b["input_tokens"] + b["output_tokens"] - e["input_tokens"] - e["output_tokens"],
+                           b["input_tokens"] + b["output_tokens"])
                   for b, e in eligible]
     times = [e["elapsed_seconds"] / b["elapsed_seconds"] for b, e in eligible]
     median_reduction = statistics.median(reductions) if reductions else None
@@ -128,11 +130,12 @@ def assess(pairs):
     no_rework_increase = all(e["rework_count"] <= b["rework_count"] and e["retries"] <= b["retries"]
                             for b, e in eligible) if eligible else None
     enough = len(eligible) >= 10 and not incomplete_real
-    passed = enough and quality and no_rework_increase and median_reduction >= .2 and median_time <= 1
+    passed = enough and quality and no_rework_increase and median_reduction >= Fraction(1, 5) and median_time <= 1
     return {"status": ("pilot-target-met" if passed else "pilot-target-not-met") if enough else "insufficient-evidence",
             "eligible_pairs": len(eligible), "excluded": excluded, "minimum_real_pairs": 10,
             "quality_preserved": quality, "no_rework_increase": no_rework_increase,
-            "median_token_reduction": median_reduction, "target_token_reduction": .2,
+            "median_token_reduction": float(median_reduction) if median_reduction is not None else None,
+            "target_token_reduction": .2,
             "median_elapsed_ratio": median_time, "maximum_median_elapsed_ratio": 1,
             "auxiliary_api_cost_usd": {"baseline": sum(b["auxiliary_api_cost_usd"] for b, _ in eligible),
                                        "economy": sum(e["auxiliary_api_cost_usd"] for _, e in eligible)} if eligible else None,

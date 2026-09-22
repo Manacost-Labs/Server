@@ -279,6 +279,12 @@ class AssessmentTests(unittest.TestCase):
                 economy.update(changes)
             self.assertEqual(benchmark.assess(pairs)["status"], "pilot-target-not-met")
 
+    def test_exact_twenty_percent_meets_threshold(self):
+        pairs = [self.pair(str(i)) for i in range(10)]
+        for _, economy in pairs:
+            economy["input_tokens"] = 76  # 120 -> 96 total tokens, exactly 20%.
+        self.assertEqual(benchmark.assess(pairs)["status"], "pilot-target-met")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -137,6 +137,23 @@ class SetupE2E(unittest.TestCase):
         self.fake.write_text(FAKE.replace("codex-cli 0.153.0", "codex-cli 0.152.0"))
         self.assertIn("Unsupported Codex version", self.installer("--dry-run").stderr)
 
+    def test_typeui_plugin_preserved_without_enabling_mcp(self):
+        self.install()
+        profile = self.home / "typeui.config.toml"
+        original = profile.read_text()
+        plugin = '\n[plugins."typeui@bergside"]\nenabled = true\n'
+        profile.write_text(original + plugin)
+        result = self.run_process(["bash", INTEGRATION / "bin/codex-context", "typeui"])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["argv"], ["-p", "typeui"])
+        self.assertEqual({n for n, v in setup.effective(self.home, "typeui").items() if v["enabled"]}, set())
+        for invalid in [plugin.replace("true", '"yes"'), plugin + 'command = "unexpected"\n',
+                        '\n[model_providers.custom]\nname = "unexpected"\n']:
+            profile.write_text(original + invalid)
+            result = self.run_process(["bash", INTEGRATION / "bin/codex-context", "typeui"])
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Incompatible", result.stderr)
+
     def test_model_manual_gate_and_missing_dependency(self):
         self.install()
         result = self.run_process(["bash", INTEGRATION / "bin/codex-run", "astra"])

@@ -89,9 +89,13 @@ def effective(home, profile):
         raise ValueError(f"Missing profile {path}; run codex_setup.py --dry-run first")
     base = tomllib.loads((home / "config.toml").read_text())
     overlay = tomllib.loads(path.read_text())
-    if set(overlay) != {"mcp_servers"} or any(set(v) != {"enabled"} or type(v["enabled"]) is not bool
-                                              for v in overlay["mcp_servers"].values()):
-        raise ValueError("Incompatible profile format: expected only explicit MCP enabled booleans")
+    if "mcp_servers" not in overlay or set(overlay) - {"mcp_servers", "plugins"}:
+        raise ValueError("Incompatible profile format: expected explicit MCP and optional plugin enabled booleans")
+    for section in ("mcp_servers", "plugins"):
+        values = overlay.get(section, {})
+        if not isinstance(values, dict) or any(not isinstance(v, dict) or set(v) != {"enabled"} or
+                                               type(v["enabled"]) is not bool for v in values.values()):
+            raise ValueError(f"Incompatible {section} profile format: only enabled booleans are supported")
     servers = {name: dict(value) for name, value in base.get("mcp_servers", {}).items()}
     for name, value in overlay.get("mcp_servers", {}).items():
         servers.setdefault(name, {}).update(value)
@@ -111,7 +115,7 @@ def dependencies(servers):
 
 def validate_runtime(home, profile):
     # app-server accepts --strict-config but rejects -p in 0.153.0. Strictly
-    # validate the base; effective() restricts overlays to MCP enabled booleans.
+    # validate the base; effective() restricts overlays to MCP/plugin booleans.
     effective(home, profile)
     subprocess.run(["codex", "app-server", "--strict-config"], input="", cwd=home,
                    env={**os.environ, "CODEX_HOME": str(home)}, capture_output=True, text=True,

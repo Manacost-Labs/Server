@@ -160,6 +160,26 @@
       ]
     },
     {
+      "id": "prompt-brief-regressions",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_prompt_brief.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
+    },
+    {
       "id": "advisory-pilot-regressions",
       "argv": [
         "python3",
@@ -325,7 +345,8 @@
         "integrations/codex/subscription-savings/codex_setup.py",
         "integrations/codex/subscription-savings/compaction_guard.py",
         "integrations/codex/subscription-savings/token_budget.py",
-        "integrations/codex/subscription-savings/benchmark.py"
+        "integrations/codex/subscription-savings/benchmark.py",
+        "tests/test_prompt_brief.py"
       ],
       "min_risk": "MEDIUM",
       "covers": [

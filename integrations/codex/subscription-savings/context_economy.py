@@ -21,6 +21,7 @@ from context_economy import (
     output,
     packing,
     pilot,
+    prompt_brief,
     repetition,
     reporting,
     typesafe,
@@ -33,6 +34,16 @@ def parser():
     command.add_argument("--project", type=Path, default=Path.cwd())
     command.add_argument("--state-dir", type=Path)
     commands = command.add_subparsers(dest="command", required=True)
+
+    prep = commands.add_parser("prompt-brief", help="Prepare an opt-in Gemma extract with the full original prompt")
+    prep.add_argument("--prompt-file", required=True, help="Project-relative UTF-8 task file, at most 8000 bytes")
+    prep.add_argument("--allow-remote", action="store_true", help="Send only this selected prompt to OpenRouter")
+    prep.add_argument("--preview-remote", action="store_true", help="Show the exact payload without sending or launching")
+    prep.add_argument("--daily-budget-usd", type=float, default=1.0)
+    prep.add_argument("--api-timeout", type=float, default=15)
+    prep.add_argument("--launch", choices=tuple(prompt_brief.MODELS), help="Explicitly launch this Codex model")
+    prep.add_argument("--reason", default="", help="Specific hard decision/review reason for Sol or Astra")
+    prep.add_argument("--profile", choices=prompt_brief.PROFILES, default="minimal")
 
     add = commands.add_parser("remember", help="Store a verified note with evidence")
     add.add_argument("--text", required=True)
@@ -140,7 +151,11 @@ def main(argv=None):
     args = parser().parse_args(argv)
     try:
         with Store(args.project, args.state_dir) as store:
-            if args.command == "assist":
+            if args.command == "prompt-brief":
+                result = prompt_brief.run(store, args)
+                print(encode(result), flush=True)
+                return prompt_brief.launch(store, args, result)
+            elif args.command == "assist":
                 result = assist.run(store, args)
                 if args.preview_remote:
                     print(encode(result))

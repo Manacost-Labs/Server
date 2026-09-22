@@ -372,3 +372,58 @@ JSON
 - [compact-plus](https://github.com/u-ichi/compact-plus) — MIT, внешний plugin.
 - [codex-usage-monitor](https://github.com/harveyxiacn/codex-usage-monitor) — MIT, внешний plugin.
 - [NVIDIA SoL-Pi](https://github.com/NVlabs/SoL-Pi) — исследовательское вдохновение; его код сюда не копировался.
+# Explicit Gemma prompt preparation
+
+Use this for a selected substantial task before launching Codex. It does not
+intercept desktop messages, change the selected model, rewrite project policy,
+or enable a prompt hook. Only the named UTF-8 prompt file is sent to OpenRouter;
+history, repository files and memory are not included. Review the selected file
+for private material first; credential pattern screening is not complete DLP.
+
+```sh
+# task.txt is relative to the selected project; preview makes no API/model call.
+context-economy --project /path/to/project prompt-brief \
+  --prompt-file task.txt --preview-remote
+
+# Prepare private original, combined prompt and measurement report artifacts.
+context-economy --project /path/to/project prompt-brief \
+  --prompt-file task.txt --allow-remote
+
+# Or prepare, then explicitly launch Astra through the existing manual gate.
+context-economy --project /path/to/project prompt-brief \
+  --prompt-file task.txt --allow-remote --launch astra \
+  --reason 'Resolve the documented concurrency design decision' --profile code
+```
+
+The JSON result names `original`, `prepared` and `report` files (mode 600 in
+private project state). For Codex Desktop, paste the contents of `prepared` into
+the selected task yourself. Running the CLI launcher opens a CLI session; it
+does not replace a message in an existing desktop task. Without `--launch`, no
+Codex model is called. Without `--allow-remote`, the original alone is saved.
+
+Gemma `google/gemma-4-26b-a4b-it` organizes exact source quotations into goal,
+acceptance criteria, constraints, unverified source context and existing open questions. Validation
+rejects invented text, unexpected fields, duplicates, incomplete responses and
+oversized extracts. Classification can still be wrong and omissions are possible:
+the full original is retained as authoritative user content, and the extract is
+explicitly untrusted reference data. Nothing is injected as developer context.
+
+Prompts under 600 characters skip Gemma. Prompts over 8000 UTF-8 bytes are rejected
+without truncation. Extract JSON is at most 3000 bytes and half the original byte
+size, with a 1024-token provider output limit. Final packets are checked against
+the conservative 12000-token estimate; an oversized combined packet falls back
+to the original. Launch rechecks that budget and preserves the existing senior
+reason/package gate and selected capability profile. Short follow-ups should go
+straight to the existing task; length alone cannot recognize every continuation.
+
+The helper reuses the shared OpenRouter ledger (maximum $1 per rolling 24 hours),
+price ceilings, one-hour cache and a maximum 15-second request timeout. There are
+no application retries or provider fallbacks. Missing credentials, exhausted
+budget, remote failure or invalid output retain the original; a failed request
+may still cost money and keeps its ledger reservation when cost is unknown.
+The configured timeout bounds socket operations, not a hard end-to-end deadline.
+
+Adding a brief usually **increases** Astra input. The report records byte counts,
+estimated input and provider-reported cost when available, never subscription
+savings. Compare quality, rework, latency and measured usage on matched real tasks
+before enabling broader use. Normal tests mock OpenRouter and never spend money.

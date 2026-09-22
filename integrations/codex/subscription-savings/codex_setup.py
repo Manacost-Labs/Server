@@ -130,9 +130,22 @@ def inspect_runtime(home, profile, cwd):
                             capture_output=True, text=True, timeout=20, check=True)
     servers = json.loads(result.stdout)
     active = {s["name"] for s in servers if s["enabled"]}
-    if active != set(PROFILES[profile]):
+    optional = plugin_mcp(home, profile)
+    if active - optional != set(PROFILES[profile]):
         raise ValueError(f"CLI profile merge disagrees for {profile}: {sorted(active)}")
     return servers
+
+
+def plugin_mcp(home, profile):
+    # A known installed plugin can contribute an MCP outside mcp_servers.
+    # Never grant this exception to minimal or to arbitrary plugin/server names.
+    if profile != "typeui":
+        return set()
+    base = tomllib.loads((home / "config.toml").read_text()).get("plugins", {})
+    overlay = tomllib.loads((home / (profile + ".config.toml")).read_text()).get("plugins", {})
+    settings = dict(base.get("typeui@bergside", {}))
+    settings.update(overlay.get("typeui@bergside", {}))
+    return {"typeui"} if settings.get("enabled") is True else set()
 
 
 def atomic(path, data):
@@ -196,6 +209,9 @@ def launch(argv):
     # Include actual project/admin layers at the launch cwd, not just the
     # managed base. No MCP servers or models are started by mcp list.
     runtime = inspect_runtime(home, profile, Path.cwd())
+    missing_plugin = plugin_mcp(home, profile) - {s["name"] for s in runtime if s["enabled"]}
+    if missing_plugin:
+        raise ValueError("Missing installed plugin MCP: " + ", ".join(sorted(missing_plugin)))
     for server in runtime:
         transport = server.get("transport", {})
         if server["enabled"] and transport.get("type") == "stdio" and not shutil.which(transport["command"]):

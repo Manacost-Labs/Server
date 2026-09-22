@@ -28,6 +28,7 @@ elif 'list' in a:
  b=tomllib.loads((home/'config.toml').read_text())['mcp_servers']
  p=tomllib.loads((home/(a[a.index('-p')+1]+'.config.toml')).read_text())
  for n,v in p['mcp_servers'].items(): b.setdefault(n,{}).update(v)
+ if p.get('plugins',{}).get('typeui@bergside',{}).get('enabled') is True: b['typeui']={'enabled':True}
  print(json.dumps([dict(name=n,enabled=v.get('enabled',True)) for n,v in b.items()]))
 elif 'exec' in a:
  pathlib.Path(a[a.index('--output-last-message')+1]).write_text('Verified synthetic summary')
@@ -153,6 +154,20 @@ class SetupE2E(unittest.TestCase):
             result = self.run_process(["bash", INTEGRATION / "bin/codex-context", "typeui"])
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("Incompatible", result.stderr)
+
+    def test_plugin_mcp_is_not_allowed_in_minimal_or_when_disabled(self):
+        self.install()
+        minimal = self.home / "minimal.config.toml"
+        minimal.write_text(minimal.read_text() + '\n[plugins."typeui@bergside"]\nenabled = true\n')
+        result = self.run_process(["bash", INTEGRATION / "bin/codex-context", "minimal"])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("CLI profile merge disagrees", result.stderr)
+        profile = self.home / "typeui.config.toml"
+        profile.write_text(profile.read_text() + '\n[plugins."typeui@bergside"]\nenabled = true\n')
+        self.fake.write_text(FAKE.replace("b['typeui']={'enabled':True}", "pass"))
+        result = self.run_process(["bash", INTEGRATION / "bin/codex-context", "typeui"])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Missing installed plugin MCP", result.stderr)
 
     def test_model_manual_gate_and_missing_dependency(self):
         self.install()

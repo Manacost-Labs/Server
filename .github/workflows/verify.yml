@@ -37,8 +37,21 @@ jobs:
           npm install --global --ignore-scripts --no-audit --no-fund @openai/codex@0.156.1
           echo "$GITHUB_WORKSPACE/integrations/codex/subscription-savings/quality/node_modules/.bin" >> "$GITHUB_PATH"
           integrations/codex/subscription-savings/quality/node_modules/.bin/playwright install --with-deps chromium
+      - name: Select verification base
+        env:
+          EVENT_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          # The first push to a branch has an all-zero before SHA.
+          # Compare that branch with its shared base instead of the entire repository tree.
+          if [[ "$EVENT_BASE" =~ ^0+$ ]]; then
+            git fetch --no-tags origin "refs/heads/$DEFAULT_BRANCH:refs/remotes/origin/$DEFAULT_BRANCH"
+            event_base=$(git merge-base HEAD "origin/$DEFAULT_BRANCH")
+          else
+            event_base="$EVENT_BASE"
+          fi
+          echo "VERIFY_BASE=$event_base" >> "$GITHUB_ENV"
       - name: Verify
         env:
           VERIFY_RISK: HIGH
-          VERIFY_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: make verify

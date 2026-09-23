@@ -12,10 +12,15 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # gitleaks:allow public action commit
         with:
           fetch-depth: 0
           persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # gitleaks:allow public action commit
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: integrations/codex/subscription-savings/quality/package-lock.json
       - name: Install verification tools
         run: |
           sudo apt-get update -qq
@@ -24,8 +29,14 @@ jobs:
           go install github.com/zricethezav/gitleaks/v8@v8.30.1
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
           python3 -m venv "$RUNNER_TEMP/quality-tools"
-          "$RUNNER_TEMP/quality-tools/bin/pip" install ruff==0.16.2
+          "$RUNNER_TEMP/quality-tools/bin/pip" install ruff==0.16.2 -r integrations/codex/subscription-savings/requirements-quality.txt
+          "$RUNNER_TEMP/quality-tools/bin/python" integrations/codex/subscription-savings/quality/provision_tokenizer.py --output "$RUNNER_TEMP/quality-tokenizer"
+          echo "MANACOST_TOKENIZER_CACHE=$RUNNER_TEMP/quality-tokenizer" >> "$GITHUB_ENV"
           echo "$RUNNER_TEMP/quality-tools/bin" >> "$GITHUB_PATH"
+          npm ci --ignore-scripts --no-audit --no-fund --prefix integrations/codex/subscription-savings/quality
+          npm install --global --ignore-scripts --no-audit --no-fund @openai/codex@0.156.1
+          echo "$GITHUB_WORKSPACE/integrations/codex/subscription-savings/quality/node_modules/.bin" >> "$GITHUB_PATH"
+          integrations/codex/subscription-savings/quality/node_modules/.bin/playwright install --with-deps chromium
       - name: Verify
         env:
           VERIFY_RISK: HIGH

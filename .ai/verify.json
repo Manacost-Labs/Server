@@ -347,7 +347,17 @@
         "integrations/codex/subscription-savings/token_budget.py",
         "integrations/codex/subscription-savings/benchmark.py",
         "tests/test_prompt_brief.py",
-        "tests/test_economy_quality.py"
+        "tests/test_economy_quality.py",
+        "integrations/codex/subscription-savings/engineering_guard.py",
+        "integrations/codex/subscription-savings/design_guard.py",
+        "integrations/codex/subscription-savings/quality/go_format.py",
+        "integrations/codex/subscription-savings/quality/secret_scan.py",
+        "tests/test_four_document_quality.py",
+        "tests/test_quality_browser.py",
+        "tests/test_quality_retrieval.py",
+        "tests/test_quality_flow.py",
+        "tests/test_quality_queue.py",
+        "tests/test_quality_release.py"
       ],
       "min_risk": "MEDIUM",
       "covers": [
@@ -368,7 +378,9 @@
         "integrations/codex/subscription-savings/bin/codex-context",
         "integrations/codex/subscription-savings/bin/codex-run",
         "integrations/codex/subscription-savings/bin/repomix-safe",
-        "integrations/codex/subscription-savings/bin/compact-plus-hook"
+        "integrations/codex/subscription-savings/bin/compact-plus-hook",
+        "integrations/codex/subscription-savings/bin/engineering-guard",
+        "integrations/codex/subscription-savings/bin/design-guard"
       ],
       "min_risk": "MEDIUM",
       "covers": [
@@ -415,6 +427,120 @@
         "unit",
         "integration",
         "security"
+      ]
+    },
+    {
+      "id": "four-document-quality",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_four_document_quality.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
+    },
+    {
+      "id": "quality-browser",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_quality_browser.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
+    },
+    {
+      "id": "quality-openrouter-retrieval",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_quality_retrieval.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit",
+        "integration",
+        "security"
+      ]
+    },
+    {
+      "id": "quality-flow",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_quality_flow.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit"
+      ]
+    },
+    {
+      "id": "quality-queue",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_quality_queue.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit"
+      ]
+    },
+    {
+      "id": "quality-release",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_quality_release.py"
+      ],
+      "min_risk": "LOW",
+      "covers": [
+        "unit"
       ]
     }
   ],

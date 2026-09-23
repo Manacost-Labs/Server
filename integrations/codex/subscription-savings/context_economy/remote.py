@@ -55,12 +55,21 @@ class Ledger:
             reserved REAL, charged REAL, status TEXT)""")
         self.db.commit()
 
-    def reserve(self, provider, fingerprint, budget):
-        if not math.isfinite(budget) or not 0 < budget <= 1:
+    def reserve(self, provider, fingerprint, budget, amount=None, call_limit=None):
+        if type(budget) not in (float, int) or not math.isfinite(budget) or not 0 < budget <= 1:
             raise ValueError("Pilot daily budget must be greater than zero and at most $1")
-        amount = RESERVATIONS[provider]
+        amount = RESERVATIONS[provider] if amount is None else amount
+        if type(amount) not in (float, int) or not math.isfinite(amount) or not 0 < amount <= 1:
+            raise ValueError("Reservation must be a finite positive amount up to $1")
+        if call_limit is not None and (type(call_limit) is not int or not 1 <= call_limit <= 100):
+            raise ValueError("Shared call limit must be 1–100")
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
+            if call_limit is not None:
+                count = self.db.execute("SELECT COUNT(*) FROM remote_reservations WHERE created>? AND provider LIKE 'quality:%'",
+                                        (time.time() - 86400,)).fetchone()[0]
+                if count >= call_limit:
+                    raise ValueError("Shared 24-hour retrieval call budget exhausted")
             used = self.db.execute("SELECT COALESCE(SUM(COALESCE(charged,reserved)),0) "
                                    "FROM remote_reservations WHERE created > ?",
                                    (time.time() - 86400,)).fetchone()[0]

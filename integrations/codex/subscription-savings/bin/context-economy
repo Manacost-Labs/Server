@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
+PATH="$root/quality/node_modules/.bin:$PATH"
+export PATH
+exec "$root/.venv/bin/python" "$root/context_economy.py" "$@"

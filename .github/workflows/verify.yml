@@ -44,11 +44,11 @@ jobs:
         run: |
           # The first push to a branch has an all-zero before SHA.
           # Compare that branch with its shared base instead of the entire repository tree.
-          if [[ "$EVENT_BASE" =~ ^0+$ ]]; then
-            git fetch --no-tags origin "refs/heads/$DEFAULT_BRANCH:refs/remotes/origin/$DEFAULT_BRANCH"
-            event_base=$(git merge-base HEAD "origin/$DEFAULT_BRANCH")
-          else
-            event_base="$EVENT_BASE"
+          event_base=$(printenv EVENT_BASE)
+          default_branch=$(printenv DEFAULT_BRANCH)
+          if [[ "$event_base" =~ ^0+$ ]]; then
+            git fetch --no-tags origin "refs/heads/$default_branch:refs/remotes/origin/$default_branch"
+            event_base=$(git merge-base HEAD "origin/$default_branch")
           fi
           echo "VERIFY_BASE=$event_base" >> "$GITHUB_ENV"
       - name: Verify

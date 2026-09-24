@@ -122,15 +122,18 @@ def parser():
         measure.add_argument("--task-id", required=True)
         if name == "meter-start":
             session = measure.add_mutually_exclusive_group(required=True)
-            session.add_argument("--session", type=Path, help="Exact local Codex JSONL session path")
-            session.add_argument("--current-session", action="store_true", help="Resolve exact CODEX_SESSION_ID locally")
+            session.add_argument("--session", type=Path, help="Exact local Codex or Claude Code JSONL session path")
+            session.add_argument("--current-session", action="store_true", help="Resolve the exact active client session")
+            measure.add_argument("--session-format", choices=("codex", "claude"), default="codex",
+                                 help="Format of an explicit --session path")
             measure.add_argument("--from-task-start", action="store_true", help="Attest measurement starts before preparation")
         if name == "meter-finish":
             measure.add_argument("--coverage-evidence", default="", help="Evidence all preparation/helpers/compaction are included")
-    attach = commands.add_parser("meter-attach", help="Measure an auxiliary Codex session before its work begins")
+    attach = commands.add_parser("meter-attach", help="Measure an auxiliary Codex or Claude Code session")
     attach.add_argument("--task-id", required=True)
     attach.add_argument("--session", required=True, type=Path)
     attach.add_argument("--role", required=True, choices=("helper", "compaction"))
+    attach.add_argument("--session-format", choices=("codex", "claude"), default="codex")
     read = commands.add_parser("read", help="Read a bounded source and hint about repeated unchanged reads")
     read.add_argument("--source", required=True)
     read.add_argument("--hypothesis", default="")
@@ -199,10 +202,13 @@ def main(argv=None):
             elif args.command == "pilot-report":
                 result = pilot.summary(store, args.dataset)
             elif args.command == "meter-start":
-                session = meter.current_session() if args.current_session else args.session
-                result = meter.start(store, args.task_id, session, from_task_start=args.from_task_start)
+                session, session_format = (meter.current_session_with_format() if args.current_session
+                                           else (args.session, args.session_format))
+                result = meter.start(store, args.task_id, session, from_task_start=args.from_task_start,
+                                     session_format=session_format)
             elif args.command == "meter-attach":
-                result = meter.attach(store, args.task_id, args.session, args.role)
+                result = meter.attach(store, args.task_id, args.session, args.role,
+                                      session_format=args.session_format)
             elif args.command in ("meter-snapshot", "meter-finish"):
                 result = meter.report(store, args.task_id, finish=args.command == "meter-finish",
                                       coverage_evidence=getattr(args, "coverage_evidence", ""))

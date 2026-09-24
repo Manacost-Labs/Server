@@ -46,3 +46,24 @@ hs-manacost.ru each have a project `CLAUDE.md` directing Claude to the nearest
 then available in Claude Code as in the other supported clients. Check the
 links with `scripts/check-agent-entrypoints.sh` from the catalog, and use the
 projects' own skill audits and release checks after changes.
+
+## Task metering in Claude Code
+
+Run `context-economy --project "$PWD" meter-start --task-id ID
+--current-session --from-task-start` from Claude Code before task preparation,
+then finish the interval after verification. The command selects the exact
+`CLAUDE_CODE_SESSION_ID` from Claude Code's local project log when
+`CLAUDECODE=1`; outside Claude Code it continues to select the exact
+`CODEX_SESSION_ID`. It never chooses the newest session by timestamp. For a
+helper session, pass its exact JSONL path with `--session PATH --session-format
+claude` to `meter-attach`. Use `--session-format claude` with `meter-start
+--session PATH` when starting from outside that session.
+
+Claude Code writes one assistant record per streamed content block, often
+repeating a request's usage. The meter counts each request once and includes
+ordinary input, cache creation and cache reads in total input; cache reads are
+also reported separately. The initial session file and each incremental read
+are limited to 8 MiB. Start a fresh Claude session if an existing log exceeds
+that bound. Incomplete usage makes the interval incomplete rather than
+inventing a savings figure. Include all preparation, retry, review and helper
+sessions before marking a pilot as fully covered.

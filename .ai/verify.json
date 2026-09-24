@@ -526,6 +526,12 @@
       "covers": ["unit"]
     },
     {
+      "id": "claude-session-meter",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_claude_meter.py"],
+      "min_risk": "LOW",
+      "covers": ["unit"]
+    },
+    {
       "id": "claude-openrouter-key",
       "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_claude_openrouter.py"],
       "min_risk": "LOW",

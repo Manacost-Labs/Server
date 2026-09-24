@@ -138,8 +138,9 @@ bounded subsets and cached rechecks without bypassing the cap.
 
 The existing `meter-start`, `meter-finish`, `pilot-record --meter-task` and
 `report --end-to-end` commands measure completed attempts and matched task
-outcomes. `meter-start --current-session` resolves the exact session ID from
-the local Codex environment without guessing from recent files. Start an
+outcomes. `meter-start --current-session` resolves the exact local Codex or
+Claude Code session ID from its host environment without guessing from recent
+files. Start an
 interval before preparation, record verification evidence
 and rework, and finish it after the final check. Include both baseline and
 advised variants for the same task hash. Current historical project data does

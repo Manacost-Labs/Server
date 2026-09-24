@@ -22,15 +22,15 @@ class CurrentSessionTests(unittest.TestCase):
             expected = sessions / f"rollout-2026-09-24T01-00-00-{self.ID}.jsonl"
             expected.write_text("")
             (sessions / "rollout-2026-09-24T02-00-00-other.jsonl").write_text("")
-            with patch.dict(os.environ, {"CODEX_HOME": temp, "CODEX_SESSION_ID": self.ID}):
+            with patch.dict(os.environ, {"CLAUDECODE": "", "CODEX_HOME": temp, "CODEX_SESSION_ID": self.ID}):
                 self.assertEqual(expected, meter.current_session())
 
     def test_missing_invalid_and_ambiguous_id_fail_closed(self):
         with tempfile.TemporaryDirectory() as temp:
-            with patch.dict(os.environ, {"CODEX_HOME": temp, "CODEX_SESSION_ID": "bad"}):
+            with patch.dict(os.environ, {"CLAUDECODE": "", "CODEX_HOME": temp, "CODEX_SESSION_ID": "bad"}):
                 with self.assertRaisesRegex(ValueError, "UUID"):
                     meter.current_session()
-            with patch.dict(os.environ, {"CODEX_HOME": temp, "CODEX_SESSION_ID": self.ID}):
+            with patch.dict(os.environ, {"CLAUDECODE": "", "CODEX_HOME": temp, "CODEX_SESSION_ID": self.ID}):
                 with self.assertRaisesRegex(ValueError, "found 0"):
                     meter.current_session()
                 for day in ("23", "24"):
@@ -39,3 +39,18 @@ class CurrentSessionTests(unittest.TestCase):
                     (folder / f"rollout-{day}-{self.ID}.jsonl").write_text("")
                 with self.assertRaisesRegex(ValueError, "found 2"):
                     meter.current_session()
+
+    def test_claude_marker_resolves_exact_project_session_even_if_codex_id_exists(self):
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp) / "projects/-example-project"
+            project.mkdir(parents=True)
+            expected = project / f"{self.ID}.jsonl"
+            expected.write_text("")
+            with patch.dict(os.environ, {"CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": self.ID,
+                                         "CLAUDE_CONFIG_DIR": temp, "CODEX_SESSION_ID": self.ID}):
+                self.assertEqual((expected, "claude"), meter.current_session_with_format())
+                other = Path(temp) / "projects/-another-project"
+                other.mkdir()
+                (other / f"{self.ID}.jsonl").write_text("")
+                with self.assertRaisesRegex(ValueError, "found 2"):
+                    meter.current_session_with_format()

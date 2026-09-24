@@ -25,6 +25,10 @@
 /srv/projects/tools/skills/scripts/check-agent-entrypoints.sh
 ```
 
+Claude Code's model gateway uses the same private OpenRouter credential as the
+installed quality CLI. Its key helper, user settings, and verification steps are
+in [Claude Code on this server](claude-code-openrouter.md).
+
 Установка глобальных клиентских ссылок:
 
 ```bash

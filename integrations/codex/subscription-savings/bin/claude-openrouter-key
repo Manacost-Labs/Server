@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+"""Supply Claude Code with the existing private OpenRouter key on demand."""
+
+import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from context_economy.remote import api_key  # noqa: E402
+
+
+if __name__ == "__main__":
+    os.environ.pop("OPENROUTER_API_KEY", None)
+    print(api_key())

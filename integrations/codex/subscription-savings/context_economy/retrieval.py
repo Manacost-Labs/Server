@@ -246,7 +246,7 @@ def lexical(store, selected, query, limit=8):
         if score <= 0:
             continue
         lines = pool[path]["text"].splitlines()
-        hits = [i for i, line in enumerate(lines) if terms.intersection(tokens(line))]
+        hits = [i for i, line in enumerate(lines) if set(tokens(line)).intersection(terms)]
         center = hits[0] if hits else 0
         start, end = max(1, center - 4), min(len(lines), center + 16)
         ranked.append({"path": path, "source": f"{path}:{start}:{end}", "sha256": pool[path]["sha256"],

@@ -42,6 +42,23 @@ class QualityCacheTests(unittest.TestCase):
         self.assertEqual(1, row["evictions"])
         self.assertEqual(1001, row["writes"])
 
+    def test_daily_counters_are_bounded_and_separate_from_lifetime_totals(self):
+        with mock.patch("context_economy.quality_common.time.time", return_value=100):
+            self.assertIsNone(cache_get(self.store, "search", "q"))
+            cache_put(self.store, "search", "q", {"ok": True})
+            self.assertIsNotNone(cache_get(self.store, "search", "q"))
+        with mock.patch("context_economy.quality_common.time.time", return_value=86500):
+            self.assertIsNone(cache_get(self.store, "search", "q"))
+            result = cache_stats(self.store, days=2)
+            self.assertEqual(["1970-01-01", "1970-01-02"],
+                             [row["date_utc"] for row in result["daily"]["search"]])
+            self.assertEqual(1, result["daily"]["search"][0]["hits"])
+            self.assertEqual(1, result["daily"]["search"][1]["expired"])
+            self.assertEqual(1, len(cache_stats(self.store, days=1)["daily"]["search"]))
+        for days in (0, 31):
+            with self.assertRaises(ValueError):
+                cache_stats(self.store, days=days)
+
 
 if __name__ == "__main__":
     unittest.main()

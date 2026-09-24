@@ -49,7 +49,7 @@ def is_test(path):
 
 def chunks(text, query, maximum_bytes=1800):
     """Rank exact contiguous chunks across the whole file, including its tail."""
-    terms = set(tokens(query))
+    terms = sorted(set(tokens(query)))
     lines = text.splitlines()
     result, start = [], 0
     while start < len(lines):
@@ -231,7 +231,7 @@ def lexical(store, selected, query, limit=8):
     cached = cache_get(store, "lexical", key)
     if cached is not None:
         return cached
-    terms = set(tokens(query))
+    terms = sorted(set(tokens(query)))
     counts = {path: Counter(tokens(path + " " + source["text"])) for path, source in pool.items()}
     lengths = {path: sum(counter.values()) for path, counter in counts.items()}
     average = max(1, sum(lengths.values()) / len(lengths))

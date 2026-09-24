@@ -520,6 +520,12 @@
       "covers": ["unit"]
     },
     {
+      "id": "current-session-meter",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_meter_current_session.py"],
+      "min_risk": "LOW",
+      "covers": ["unit"]
+    },
+    {
       "id": "quality-queue",
       "argv": [
         "python3",

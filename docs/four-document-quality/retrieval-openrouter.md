@@ -99,14 +99,14 @@ quality_python=python3
 # Replace preview with --allow-remote only for authorized selected source.
 # The same explicit source selection works with the rerank command.
 
-# Evaluate fixed, labeled queries on selected project source; remote mode is opt-in.
+# Evaluate versioned labels owned by each project; remote mode is opt-in.
 "$quality_python" "$quality_src/context_economy.py" --project /srv/projects/web/HeartPulse \
-  retrieval-eval --suite hearthpulse
+  retrieval-eval --manifest config/retrieval-eval.json
 "$quality_python" "$quality_src/context_economy.py" --project /srv/projects/wordpress/hs-manacost.ru \
-  retrieval-eval --suite hs-manacost --semantic
+  retrieval-eval --manifest config/retrieval-eval.json --semantic --case-id s3-image-path
 
-# Inspect local cache activity without printing source or query keys.
-"$quality_python" "$quality_src/context_economy.py" --project /path/to/project cache-stats
+# Inspect bounded UTC daily cache activity without source or query keys.
+"$quality_python" "$quality_src/context_economy.py" --project /path/to/project cache-stats --days 7
 ```
 
 The models return vectors or scores. All code returned to the caller comes from
@@ -117,8 +117,8 @@ the license, compatibility and relevant tests before incorporating a reference.
 
 ## Project retrieval check and task measurement
 
-The `retrieval-eval` suites pin two small, labeled cases per project in
-`context_economy/retrieval_eval.py`. On 2026-09-24, HearthPulse at
+The original built-in `retrieval-eval` suites pin two small, labeled cases per
+project in `context_economy/retrieval_eval.py`. On 2026-09-24, HearthPulse at
 `09b417e16bb929ff6508cf2566520bbefb5aa039` returned the expected file at
 rank 1 for both cases locally and through native OpenRouter embedding/rerank.
 hs-manacost.ru at `7ca40c8ef04438d6765d111c2327309fe50dcf5b` returned
@@ -128,16 +128,25 @@ made four OpenRouter calls per project; immediate repeats made zero. A real
 PHP AST edge case found during this run was fixed so empty reference fragments
 are skipped. These four cases are a smoke benchmark, not a representative
 measure of task success or token savings; expand the labeled set before tuning
-default search behavior.
+default search behavior. The versioned project manifests now carry six positive
+and one no-answer case each, so labels can move with source. On current selected
+project worktrees, the local search found all twelve target files in the top
+three snippets (HearthPulse MRR 1.0; hs-manacost.ru MRR 0.917) and rejected
+both no-answer cases. The expanded OpenRouter run reached the shared 24-hour
+call cap before completion; no full remote score is claimed. `--case-id` permits
+bounded subsets and cached rechecks without bypassing the cap.
 
-The existing `meter-start`, `meter-stop`, `pilot-record --meter-task` and
+The existing `meter-start`, `meter-finish`, `pilot-record --meter-task` and
 `report --end-to-end` commands measure completed attempts and matched task
-outcomes. Start an interval before preparation, record verification evidence
+outcomes. `meter-start --current-session` resolves the exact session ID from
+the local Codex environment without guessing from recent files. Start an
+interval before preparation, record verification evidence
 and rework, and finish it after the final check. Include both baseline and
 advised variants for the same task hash. Current historical project data does
 not contain a completed matched pilot, so no percentage reduction is claimed.
 `cache-stats` exposes hit, miss, expiry, write, eviction and retained-entry
-counts by namespace; the 1000-entry global cap and existing TTL remain in
+counts by namespace plus up to 30 UTC daily buckets. Historical daily counts
+cannot be backfilled. The 1000-entry global cap and existing TTL remain in
 place until real churn data justify a change.
 
 ## Live smoke evidence (public source only)

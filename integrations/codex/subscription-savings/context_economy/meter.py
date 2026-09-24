@@ -3,6 +3,7 @@
 import json
 import math
 import os
+import re
 import sqlite3
 import stat
 import time
@@ -13,6 +14,18 @@ from .common import encode
 WINDOW = 8 * 1024 * 1024
 TOKENS = {"input_tokens": "input_tokens", "output_tokens": "output_tokens",
           "cached_input_tokens": "cached_input_tokens", "reasoning_tokens": "reasoning_output_tokens"}
+
+
+def current_session():
+    """Find only the current Codex session identified explicitly by the host."""
+    identifier = os.environ.get("CODEX_SESSION_ID", "")
+    if not re.fullmatch(r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}", identifier):
+        raise ValueError("CODEX_SESSION_ID must contain the current session UUID")
+    root = Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex"))) / "sessions"
+    matches = list(root.glob(f"*/*/*/*-{identifier}.jsonl"))
+    if len(matches) != 1:
+        raise ValueError(f"Expected exactly one local session for CODEX_SESSION_ID; found {len(matches)}")
+    return matches[0]
 
 
 def schema(store):

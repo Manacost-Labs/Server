@@ -22,10 +22,14 @@ def selected(parser):
 
 
 def add_parsers(commands):
-    commands.add_parser("cache-stats", help="Aggregate local quality cache hits, misses and evictions")
+    cache = commands.add_parser("cache-stats", help="Aggregate local quality cache activity without query text")
+    cache.add_argument("--days", type=int, default=7, help="Show 1–30 recent UTC daily buckets")
     evaluation = commands.add_parser("retrieval-eval", help="Evaluate labeled real-project code search")
-    evaluation.add_argument("--suite", choices=("hearthpulse", "hs-manacost"), required=True)
+    selected_set = evaluation.add_mutually_exclusive_group(required=True)
+    selected_set.add_argument("--suite", choices=("hearthpulse", "hs-manacost"))
+    selected_set.add_argument("--manifest", help="Versioned labeled case file relative to the selected project")
     evaluation.add_argument("--semantic", action="store_true", help="Opt in to native OpenRouter embedding and rerank")
+    evaluation.add_argument("--case-id", action="append", default=[], help="Run only this labeled case; repeat for a subset")
     evaluation.add_argument("--limit", type=int, default=3)
     relations = commands.add_parser("relations", help="Compiler-resolved selected TypeScript bindings; explicit AST fallback")
     selected(relations)
@@ -150,10 +154,16 @@ def configuration(store, args):
 def execute(store, args):
     command = args.command
     if command == "cache-stats":
-        return cache_stats(store)
+        return cache_stats(store, args.days)
     if command == "retrieval-eval":
         from . import retrieval_eval
-        return retrieval_eval.evaluate(store, retrieval_eval.SUITES[args.suite], args.semantic, args.limit)
+        if args.manifest:
+            cases, fingerprint = retrieval_eval.load_manifest(store, args.manifest)
+            cases = retrieval_eval.select_cases(cases, args.case_id)
+            return {**retrieval_eval.evaluate(store, cases, args.semantic, args.limit),
+                    "manifest_sha256": fingerprint}
+        cases = retrieval_eval.select_cases(retrieval_eval.SUITES[args.suite], args.case_id)
+        return retrieval_eval.evaluate(store, cases, args.semantic, args.limit)
     if command == "relations":
         from . import relations
         return relations.lookup(store, args.source, args.symbol, args.direction, args.limit, args.config, args.definition_path)

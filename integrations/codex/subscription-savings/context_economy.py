@@ -121,7 +121,9 @@ def parser():
         measure = commands.add_parser(name, help="Measure one explicit session interval locally")
         measure.add_argument("--task-id", required=True)
         if name == "meter-start":
-            measure.add_argument("--session", required=True, type=Path, help="Exact local Codex JSONL session path")
+            session = measure.add_mutually_exclusive_group(required=True)
+            session.add_argument("--session", type=Path, help="Exact local Codex JSONL session path")
+            session.add_argument("--current-session", action="store_true", help="Resolve exact CODEX_SESSION_ID locally")
             measure.add_argument("--from-task-start", action="store_true", help="Attest measurement starts before preparation")
         if name == "meter-finish":
             measure.add_argument("--coverage-evidence", default="", help="Evidence all preparation/helpers/compaction are included")
@@ -197,7 +199,8 @@ def main(argv=None):
             elif args.command == "pilot-report":
                 result = pilot.summary(store, args.dataset)
             elif args.command == "meter-start":
-                result = meter.start(store, args.task_id, args.session, from_task_start=args.from_task_start)
+                session = meter.current_session() if args.current_session else args.session
+                result = meter.start(store, args.task_id, session, from_task_start=args.from_task_start)
             elif args.command == "meter-attach":
                 result = meter.attach(store, args.task_id, args.session, args.role)
             elif args.command in ("meter-snapshot", "meter-finish"):

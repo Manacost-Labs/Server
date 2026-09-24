@@ -62,24 +62,26 @@ def cache_get(store, namespace, key, ttl=86400):
     _cache_tables(store)
     row = store.db.execute("SELECT created,value FROM quality_cache WHERE namespace=? AND key=?",
                            (namespace, digest(encode([VERSION, key]).encode()))).fetchone()
-    age = time.time() - row["created"] if row else None
+    now = time.time()
+    age = now - row["created"] if row else None
     event = "misses" if row is None else "hits" if 0 <= age < ttl else "expired"
-    _cache_count(store, namespace, event)
+    _cache_count(store, namespace, event, now)
     store.db.commit()
     return json.loads(row["value"]) if event == "hits" else None
 
 
 def cache_put(store, namespace, key, value):
     _cache_tables(store)
+    now = time.time()
     store.db.execute("INSERT OR REPLACE INTO quality_cache VALUES(?,?,?,?)",
-                     (namespace, digest(encode([VERSION, key]).encode()), time.time(), encode(value)))
-    _cache_count(store, namespace, "writes")
+                     (namespace, digest(encode([VERSION, key]).encode()), now, encode(value)))
+    _cache_count(store, namespace, "writes", now)
     # Count actual evictions by namespace without retaining keys or query text.
     overflow = store.db.execute("SELECT rowid,namespace FROM quality_cache "
                                 "ORDER BY created DESC,rowid DESC LIMIT -1 OFFSET 1000").fetchall()
     for row in overflow:
         store.db.execute("DELETE FROM quality_cache WHERE rowid=?", (row["rowid"],))
-        _cache_count(store, row["namespace"], "evictions")
+        _cache_count(store, row["namespace"], "evictions", now)
     store.db.commit()
 
 
@@ -88,15 +90,25 @@ def _cache_tables(store):
                      "(namespace TEXT, key TEXT, created REAL, value TEXT, PRIMARY KEY(namespace,key))")
     store.db.execute("CREATE TABLE IF NOT EXISTS quality_cache_counters "
                      "(namespace TEXT, event TEXT, count INTEGER NOT NULL, PRIMARY KEY(namespace,event))")
+    store.db.execute("CREATE TABLE IF NOT EXISTS quality_cache_daily "
+                     "(namespace TEXT, day INTEGER, event TEXT, count INTEGER NOT NULL, "
+                     "PRIMARY KEY(namespace,day,event))")
+    store.db.execute("CREATE INDEX IF NOT EXISTS quality_cache_daily_day ON quality_cache_daily(day)")
 
 
-def _cache_count(store, namespace, event):
+def _cache_count(store, namespace, event, now):
     store.db.execute("INSERT INTO quality_cache_counters VALUES(?,?,1) "
                      "ON CONFLICT(namespace,event) DO UPDATE SET count=count+1", (namespace, event))
+    day = int(now // 86400)
+    store.db.execute("INSERT INTO quality_cache_daily VALUES(?,?,?,1) "
+                     "ON CONFLICT(namespace,day,event) DO UPDATE SET count=count+1", (namespace, day, event))
+    store.db.execute("DELETE FROM quality_cache_daily WHERE day<?", (day - 29,))
 
 
-def cache_stats(store):
+def cache_stats(store, days=7):
     """Aggregate cache activity without exposing source, query or cache keys."""
+    if type(days) is not int or not 1 <= days <= 30:
+        raise ValueError("Cache history requires 1–30 days")
     _cache_tables(store)
     names = {}
     for row in store.db.execute("SELECT namespace,event,count FROM quality_cache_counters"):
@@ -105,7 +117,17 @@ def cache_stats(store):
     for row in store.db.execute("SELECT namespace,COUNT(*) AS count FROM quality_cache GROUP BY namespace"):
         names.setdefault(row["namespace"], {name: 0 for name in
                          ("hits", "misses", "expired", "writes", "evictions", "entries")})["entries"] = row["count"]
-    return {"limit": 1000, "ttl_seconds": 86400, "namespaces": names}
+    today = int(time.time() // 86400)
+    daily = {}
+    for row in store.db.execute("SELECT namespace,day,event,count FROM quality_cache_daily "
+                                "WHERE day BETWEEN ? AND ? ORDER BY namespace,day,event", (today - days + 1, today)):
+        date = time.strftime("%Y-%m-%d", time.gmtime(row["day"] * 86400))
+        rows = daily.setdefault(row["namespace"], {})
+        bucket = rows.setdefault(date, {"date_utc": date, **{event: 0 for event in
+                                      ("hits", "misses", "expired", "writes", "evictions")}})
+        bucket[row["event"]] = row["count"]
+    return {"limit": 1000, "ttl_seconds": 86400, "namespaces": names, "days": days,
+            "daily": {namespace: list(rows.values()) for namespace, rows in daily.items()}}
 
 
 @contextlib.contextmanager

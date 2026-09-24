@@ -83,8 +83,8 @@ cache TTL bound reuse, and operators must bump the revision on backend changes.
 ## Working commands
 
 ```sh
-quality_src=/srv/projects/tools/skills-four-document-quality-candidate-20260923/integrations/codex/subscription-savings
-quality_python=/tmp/four-document-quality-venv-20260923/bin/python
+quality_src=/srv/projects/tools/skills/integrations/codex/subscription-savings
+quality_python=python3
 
 # Fetch real public implementations and rerank the verified snippets.
 "$quality_python" "$quality_src/context_economy.py" --project /path/to/project reference-search \
@@ -98,6 +98,15 @@ quality_python=/tmp/four-document-quality-venv-20260923/bin/python
 
 # Replace preview with --allow-remote only for authorized selected source.
 # The same explicit source selection works with the rerank command.
+
+# Evaluate fixed, labeled queries on selected project source; remote mode is opt-in.
+"$quality_python" "$quality_src/context_economy.py" --project /srv/projects/web/HeartPulse \
+  retrieval-eval --suite hearthpulse
+"$quality_python" "$quality_src/context_economy.py" --project /srv/projects/wordpress/hs-manacost.ru \
+  retrieval-eval --suite hs-manacost --semantic
+
+# Inspect local cache activity without printing source or query keys.
+"$quality_python" "$quality_src/context_economy.py" --project /path/to/project cache-stats
 ```
 
 The models return vectors or scores. All code returned to the caller comes from
@@ -105,6 +114,31 @@ the original verified source; the models cannot supply invented code or new
 source IDs. Unknown, duplicated or missing response indices and invalid vectors
 or scores fail validation. Source may still be unsuitable or malicious: inspect
 the license, compatibility and relevant tests before incorporating a reference.
+
+## Project retrieval check and task measurement
+
+The `retrieval-eval` suites pin two small, labeled cases per project in
+`context_economy/retrieval_eval.py`. On 2026-09-24, HearthPulse at
+`09b417e16bb929ff6508cf2566520bbefb5aa039` returned the expected file at
+rank 1 for both cases locally and through native OpenRouter embedding/rerank.
+hs-manacost.ru at `7ca40c8ef04438d6765d111c2327309fe50dcf5b` returned
+both files within the top three locally (mean reciprocal rank 0.75) and at
+rank 1 after embedding/rerank (mean reciprocal rank 1.0). First remote runs
+made four OpenRouter calls per project; immediate repeats made zero. A real
+PHP AST edge case found during this run was fixed so empty reference fragments
+are skipped. These four cases are a smoke benchmark, not a representative
+measure of task success or token savings; expand the labeled set before tuning
+default search behavior.
+
+The existing `meter-start`, `meter-stop`, `pilot-record --meter-task` and
+`report --end-to-end` commands measure completed attempts and matched task
+outcomes. Start an interval before preparation, record verification evidence
+and rework, and finish it after the final check. Include both baseline and
+advised variants for the same task hash. Current historical project data does
+not contain a completed matched pilot, so no percentage reduction is claimed.
+`cache-stats` exposes hit, miss, expiry, write, eviction and retained-entry
+counts by namespace; the 1000-entry global cap and existing TTL remain in
+place until real churn data justify a change.
 
 ## Live smoke evidence (public source only)
 

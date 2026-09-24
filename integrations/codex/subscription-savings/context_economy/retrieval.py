@@ -73,11 +73,15 @@ def chunks(text, query, maximum_bytes=1800):
 
 
 def _name(text, group):
-    first = text.strip().splitlines()[0]
+    lines = text.strip().splitlines()
+    if not lines:
+        return ""
+    first = lines[0]
     if group == "imports":
         return first[:200]
     if group == "references":
-        return re.sub(r"^new\s+|^<", "", first.split("(")[0]).split()[0][:160]
+        parts = re.sub(r"^new\s+|^<", "", first.split("(")[0]).split()
+        return parts[0][:160] if parts else ""
     match = re.search(r"\b(?:async\s+def|def|function|class|interface|trait|type)\s+([\w$]+)", first)
     if not match:
         match = re.search(r"\bfunc\s+(?:\([^)]*\)\s*)?([\w]+)", first)
@@ -109,7 +113,10 @@ def parse_ast(path, source, tool, language):
             "symbols": [], "references": [], "imports": []}
     for node in json.loads(raw):
         group, kind = node["ruleId"].split(":", 1)
-        item[group].append({"name": _name(node["text"], group), "kind": kind,
+        name = _name(node["text"], group)
+        if not name:
+            continue
+        item[group].append({"name": name, "kind": kind,
                             "start": node["range"]["start"]["line"] + 1,
                             "end": node["range"]["end"]["line"] + 1})
     return item

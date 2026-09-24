@@ -124,6 +124,16 @@ class QualityTests(unittest.TestCase):
         self.assertEqual("high", auth["risk"])
         self.assertLess(auth["estimated_tokens"], 1500)
 
+    def test_router_raises_risk_for_secrets_crypto_and_wordpress_config(self):
+        for path in ("config/secrets.py", "src/crypto.py", "wp-config.php",
+                     "src/credentials.ts", "src/authorization.go", "config/.env.production"):
+            with self.subTest(path=path):
+                result = quality_policy.route([path])
+                self.assertEqual("high", result["risk"])
+                self.assertEqual("heavy", result["tier"])
+                self.assertIn("engineering/shared-security", [m["id"] for m in result["modules"]])
+        self.assertEqual("low", quality_policy.route(["src/tokenizer.py"])["risk"])
+
     def test_failure_missing_tool_and_timeout_cannot_pass(self):
         for check, status in [(self.check("raise SystemExit(9)"), "failed"),
                               ({"id": "absent", "argv": ["missing-quality-tool-123"]}, "missing_tool"),

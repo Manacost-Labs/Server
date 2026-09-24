@@ -33,8 +33,9 @@ def route(paths, task_type="implementation", risk="low", stack=None, budget=1500
         stacks.add(stack)
     assets = any(Path(p).suffix in {".png", ".jpg", ".webp", ".avif"} for p in paths)
     ui = assets or task_type == "ui" or any(Path(p).suffix in {".tsx", ".jsx", ".css", ".scss", ".svg"} for p in paths)
-    security = any(any(word in p.casefold() for word in ("auth", "session", "permission", "payment", "migration"))
-                   for p in paths)
+    security = any(any(word in p.casefold() for word in (
+        "auth", "session", "permission", "payment", "migration", "secret", "credential", "crypto", "wp-config"))
+        or Path(p).name.casefold().startswith(".env") for p in paths)
     effective_risk = "high" if security and RISKS[risk] < 2 else risk
     tier = "heavy" if RISKS[effective_risk] >= 2 or task_type in {
         "release", "dependency", "architecture", "performance"} else (

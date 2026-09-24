@@ -8,9 +8,10 @@ from pathlib import Path
 
 from . import design, quality_checks, quality_policy, retrieval
 from .common import Store, encode, read_source
-from .quality_common import load_config, load_profile
+from .quality_common import cache_stats, load_config, load_profile
 
-COMMANDS = {"repo-map", "index-update", "source-read", "retrieve", "symbols", "callers", "tests", "search", "context-build", "verify-context",
+COMMANDS = {"repo-map", "index-update", "source-read", "retrieve", "retrieval-eval", "symbols", "callers", "tests", "search", "context-build", "verify-context",
+            "cache-stats",
             "queue-submit", "queue-status", "queue-cancel", "queue-worker", "relations",
             "quality-plan", "quality-verify", "guard-context", "design-check", "design-context",
             "performance-check", "docs", "reference-search", "semantic-search", "rerank", "asset-prepare", "svg-normalize"}
@@ -21,6 +22,11 @@ def selected(parser):
 
 
 def add_parsers(commands):
+    commands.add_parser("cache-stats", help="Aggregate local quality cache hits, misses and evictions")
+    evaluation = commands.add_parser("retrieval-eval", help="Evaluate labeled real-project code search")
+    evaluation.add_argument("--suite", choices=("hearthpulse", "hs-manacost"), required=True)
+    evaluation.add_argument("--semantic", action="store_true", help="Opt in to native OpenRouter embedding and rerank")
+    evaluation.add_argument("--limit", type=int, default=3)
     relations = commands.add_parser("relations", help="Compiler-resolved selected TypeScript bindings; explicit AST fallback")
     selected(relations)
     relations.add_argument("symbol")
@@ -143,6 +149,11 @@ def configuration(store, args):
 
 def execute(store, args):
     command = args.command
+    if command == "cache-stats":
+        return cache_stats(store)
+    if command == "retrieval-eval":
+        from . import retrieval_eval
+        return retrieval_eval.evaluate(store, retrieval_eval.SUITES[args.suite], args.semantic, args.limit)
     if command == "relations":
         from . import relations
         return relations.lookup(store, args.source, args.symbol, args.direction, args.limit, args.config, args.definition_path)

@@ -508,6 +508,18 @@
       ]
     },
     {
+      "id": "quality-cache-metrics",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_quality_cache.py"],
+      "min_risk": "LOW",
+      "covers": ["unit"]
+    },
+    {
+      "id": "real-code-retrieval-eval",
+      "argv": ["python3", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_retrieval_eval.py"],
+      "min_risk": "LOW",
+      "covers": ["unit"]
+    },
+    {
       "id": "quality-queue",
       "argv": [
         "python3",

@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "stack": "nextjs",
+  "checks": [
+    {
+      "id": "types",
+      "argv": [
+        "node_modules/.bin/tsc",
+        "--noEmit"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "lint",
+      "argv": [
+        "node_modules/.bin/eslint",
+        "{changed_js}"
+      ],
+      "tier": "fast",
+      "paths": [
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.ts",
+        "**/*.tsx"
+      ]
+    },
+    {
+      "id": "tests",
+      "argv": [
+        "npm",
+        "run",
+        "test:unit"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "unused-code",
+      "argv": [
+        "node_modules/.bin/knip"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "dependencies",
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=high"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "network": true
+    },
+    {
+      "id": "browser",
+      "argv": [
+        "npm",
+        "run",
+        "test:e2e"
+      ],
+      "tier": "heavy",
+      "paths": [],
+      "timeout": 600
+    },
+    {
+      "id": "build-budget",
+      "argv": [
+        "npm",
+        "run",
+        "check:bundle"
+      ],
+      "tier": "heavy",
+      "paths": []
+    },
+    {
+      "id": "secrets",
+      "argv": [
+        "{python}",
+        "{quality_root}/quality/secret_scan.py",
+        "{changed}"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "static-security",
+      "argv": [
+        "codex-semgrep",
+        "{changed}"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "network": true
+    }
+  ],
+  "heavy_limits": {
+    "cpu_percent": 200,
+    "memory_mb": 2048
+  }
+}

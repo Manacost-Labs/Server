@@ -2,13 +2,14 @@
 
 from pathlib import Path
 
+from offline_tokenizer import estimate as offline_estimate
 from token_budget import estimate_text
 
 from .common import encode, read_source
 
 
 def estimate(text):
-    return estimate_text(text)["estimated_tokens"]
+    return (offline_estimate(text) or estimate_text(text))["estimated_tokens"]
 
 
 def build(root, task, sources, required, notes, budget=12000):
@@ -58,4 +59,4 @@ def build(root, task, sources, required, notes, budget=12000):
     if estimate(text) > budget:
         raise ValueError("Pack reaches budget boundary; increase budget slightly")
     return {"text": text, "omitted": document["omitted"], "estimated_tokens": estimate(text),
-            "estimator": "UTF-8 bytes + 15% conservative estimate; not observed Codex tokens"}
+            "estimator": (offline_estimate(text) or {}).get("estimator", "UTF-8 bytes + 15% conservative fallback; not observed usage")}

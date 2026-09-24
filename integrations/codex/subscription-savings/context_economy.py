@@ -23,6 +23,7 @@ from context_economy import (
     packing,
     pilot,
     prompt_brief,
+    quality_cli,
     repetition,
     reporting,
     typesafe,
@@ -149,6 +150,7 @@ def parser():
     focused.add_argument("--required", action="append", default=[])
     focused.add_argument("--query", help="Optional symbol query; otherwise derive bounded call/definition names")
     focused.add_argument("--budget", type=int, default=12000)
+    quality_cli.add_parsers(commands)
     return command
 
 
@@ -165,6 +167,8 @@ def main(argv=None):
         with Store(args.project, args.state_dir) as store:
             if args.meter_task_id and not args.command.startswith("meter-"):
                 meter.bind(store, args.meter_task_id)
+            if args.command in quality_cli.COMMANDS:
+                return quality_cli.emit(quality_cli.execute(store, args))
             if args.command == "prompt-brief":
                 result = prompt_brief.run(store, args)
                 print(encode(result), flush=True)

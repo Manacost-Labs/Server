@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "stack": "wordpress",
+  "project": "hs-manacost.ru",
+  "design": {
+    "tokens": {
+      "from_css": [
+        "wordpress/mu-plugins/hs-manacost-reader/ui.css",
+        "wordpress/mu-plugins/hs-manacost-reader/reader.css"
+      ]
+    },
+    "token_sources": [
+      "wordpress/mu-plugins/hs-manacost-reader/ui.css"
+    ],
+    "token_selectors": [
+      ".mc-reader-ui"
+    ],
+    "registry": [
+      {
+        "name": "ReaderButton",
+        "source": "wordpress/mu-plugins/hs-manacost-reader/ui.css",
+        "tokens": [
+          "--mc-ui-accent",
+          "--mc-ui-radius"
+        ],
+        "states": [
+          "default",
+          "secondary",
+          "disabled",
+          "focus"
+        ]
+      },
+      {
+        "name": "ReaderAccount",
+        "source": "wordpress/mu-plugins/hs-manacost-reader/account.php",
+        "tokens": [
+          "--mc-ui-surface",
+          "--mc-ui-text"
+        ],
+        "states": [
+          "overview",
+          "editing"
+        ]
+      },
+      {
+        "name": "ReaderComments",
+        "source": "wordpress/mu-plugins/hs-manacost-reader/comments.php",
+        "tokens": [
+          "--mc-ui-text"
+        ],
+        "states": [
+          "guest",
+          "signed-in"
+        ]
+      },
+      {
+        "name": "PlatformIcons",
+        "source": "wordpress/mu-plugins/hs-manacost-reader/platform-icons.php",
+        "tokens": [],
+        "states": [
+          "platform"
+        ]
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "php-syntax",
+      "argv": [
+        "make",
+        "php-lint"
+      ],
+      "tier": "fast",
+      "paths": [
+        "wordpress/**/*.php",
+        "config/**/*.php"
+      ],
+      "timeout": 300
+    },
+    {
+      "id": "contracts",
+      "argv": [
+        "make",
+        "contract-check"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "unit",
+      "argv": [
+        "make",
+        "test"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "first-party-code-quality",
+      "argv": [
+        "make",
+        "code-quality"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "timeout": 300
+    },
+    {
+      "id": "reader-css",
+      "argv": [
+        "make",
+        "reader-css-check"
+      ],
+      "tier": "medium",
+      "paths": [
+        "wordpress/mu-plugins/hs-manacost-reader/**"
+      ]
+    },
+    {
+      "id": "reader-tests",
+      "argv": [
+        "make",
+        "reader-test"
+      ],
+      "tier": "medium",
+      "paths": [
+        "wordpress/mu-plugins/hs-manacost-reader/**",
+        "services/reader/**"
+      ]
+    },
+    {
+      "id": "integration",
+      "argv": [
+        "make",
+        "integration"
+      ],
+      "tier": "heavy",
+      "paths": [],
+      "timeout": 600,
+      "network": true
+    },
+    {
+      "id": "visual",
+      "argv": [
+        "make",
+        "visual"
+      ],
+      "tier": "heavy",
+      "paths": [],
+      "family": "design",
+      "timeout": 600,
+      "network": true
+    },
+    {
+      "id": "design-tokens",
+      "argv": [
+        "{python}",
+        "{quality_root}/design_guard.py",
+        "--profile",
+        "hs-manacost",
+        "tokens"
+      ],
+      "tier": "fast",
+      "paths": [],
+      "family": "design"
+    },
+    {
+      "id": "design-components",
+      "argv": [
+        "{python}",
+        "{quality_root}/design_guard.py",
+        "--profile",
+        "hs-manacost",
+        "components"
+      ],
+      "tier": "fast",
+      "paths": [],
+      "family": "design"
+    }
+  ],
+  "heavy_limits": {
+    "cpu_percent": 200,
+    "memory_mb": 2048
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "stack": "wordpress",
+  "checks": [
+    {
+      "id": "wpcs",
+      "argv": [
+        "vendor/bin/phpcs",
+        "--standard=WordPress",
+        "{changed_php}"
+      ],
+      "tier": "fast",
+      "paths": [
+        "**/*.php"
+      ]
+    },
+    {
+      "id": "phpstan",
+      "argv": [
+        "vendor/bin/phpstan",
+        "analyse",
+        "--no-progress"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "tests",
+      "argv": [
+        "vendor/bin/phpunit"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "boundaries",
+      "argv": [
+        "vendor/bin/deptrac",
+        "analyse"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "rector-dry-run",
+      "argv": [
+        "vendor/bin/rector",
+        "process",
+        "--dry-run"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "dependencies",
+      "argv": [
+        "composer",
+        "audit",
+        "--locked",
+        "--no-interaction"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "network": true
+    },
+    {
+      "id": "mutation",
+      "argv": [
+        "vendor/bin/infection",
+        "--threads=1"
+      ],
+      "tier": "heavy",
+      "paths": [],
+      "timeout": 600
+    },
+    {
+      "id": "secrets",
+      "argv": [
+        "{python}",
+        "{quality_root}/quality/secret_scan.py",
+        "{changed}"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "static-security",
+      "argv": [
+        "codex-semgrep",
+        "{changed}"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "network": true
+    }
+  ],
+  "heavy_limits": {
+    "cpu_percent": 200,
+    "memory_mb": 2048
+  }
+}

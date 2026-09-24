@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
+PATH="$root/quality/node_modules/.bin:$PATH"
+export PATH
+python=python3
+if [ -x "$root/.venv/bin/python" ]; then python="$root/.venv/bin/python"; fi
+exec "$python" "$root/design_guard.py" "$@"

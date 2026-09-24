@@ -1,0 +1,2174 @@
+{
+  "schema": 1,
+  "notice": "All 142 source sections mapped. Status describes bounded source/local verification, never deployment or blanket acceptance. WPScan proprietary advisory access and independent review/activation remain open; see completion.md.",
+  "requirements": [
+    {
+      "id": "D1-01",
+      "title": "Что уже есть в Manacost-Labs/Server",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_policy.py`, `guard-context`, `quality-plan`; deterministic stack/risk/task selection",
+      "evidence_and_limit": "Router tests; zero classification model calls Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-02",
+      "title": "Итоговая архитектура",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_policy.py`, `guard-context`, `quality-plan`; deterministic stack/risk/task selection",
+      "evidence_and_limit": "Router tests; zero classification model calls Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-03",
+      "title": "Этап 1 — дешёвая классификация задачи",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_policy.py`, `guard-context`, `quality-plan`; deterministic stack/risk/task selection",
+      "evidence_and_limit": "Router tests; zero classification model calls",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-04",
+      "title": "Repo Map вместо чтения проекта",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`retrieval.py`: ast-grep parses Python, Go, JS/TS/TSX and PHP; SHA/version cache",
+      "evidence_and_limit": "Actual multi-language parser tests; syntactic references, not a resolved compiler call graph or SCIP index",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-05",
+      "title": "Заменить regex symbol search на AST search",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`retrieval.py`: ast-grep parses Python, Go, JS/TS/TSX and PHP; SHA/version cache; TypeScript checker declarations/aliases/callers/callees via relations.py/typescript-relations.mjs",
+      "evidence_and_limit": "Actual multi-language parser tests; syntactic references, not a resolved compiler call graph or SCIP index Compiler-bound TS regressions; other languages remain syntactic candidates.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-06",
+      "title": "Быстрый локальный code search",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Bounded BM25 `search` with query/source-hash cache",
+      "evidence_and_limit": "Explicit source limits; no global Zoekt service or recursive project scan",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-07",
+      "title": "Поиск связанных тестов автоматически",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "AST call sites, enclosing test symbols, test priority in `context-build`; TypeScript checker declarations/aliases/callers/callees via relations.py/typescript-relations.mjs",
+      "evidence_and_limit": "Regression finds a real caller and ignores a commented call; heuristic test association Compiler-bound TS regressions; other languages remain syntactic candidates.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-08",
+      "title": "Context7 для актуальной документации",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`docs` adapter, library/version/query keys, three excerpts",
+      "evidence_and_limit": "Permission/preview/cache tests; requested version is reported, not falsely certified",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-09",
+      "title": "External Reference Search",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`reference-search`: gh code search, non-archived/licensed repositories, pinned commit/file/hash",
+      "evidence_and_limit": "Metadata filtering; compatibility, tests and production suitability explicitly remain unverified",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-10",
+      "title": "Как определять хороший GitHub-код",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`reference-search`: gh code search, non-archived/licensed repositories, pinned commit/file/hash",
+      "evidence_and_limit": "Metadata filtering; compatibility, tests and production suitability explicitly remain unverified",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-11",
+      "title": "Embeddings — только когда lexical/AST поиска недостаточно",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Native OpenRouter Qwen3 embedding/rerank APIs, shared server credentials/ledger, local cosine ranking, bounded AST shortlist; explicit custom providers remain supported",
+      "evidence_and_limit": "Live public-code API/cache checks and strict response/provenance tests; see retrieval-openrouter.md Native OpenRouter public-source validation: four calls $0.00049824; repeated retrieval zero API calls.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "retrieval-openrouter.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-12",
+      "title": "Reranker",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Native OpenRouter Qwen3 embedding/rerank APIs, shared server credentials/ledger, local cosine ranking, bounded AST shortlist; explicit custom providers remain supported",
+      "evidence_and_limit": "Live public-code API/cache checks and strict response/provenance tests; see retrieval-openrouter.md Native OpenRouter public-source validation: four calls $0.00049824; repeated retrieval zero API calls.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "retrieval-openrouter.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-13",
+      "title": "Кэшировать embeddings и retrieval",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_common.py` SQLite caches; embeddings reuse model/vector revision + source SHA + exact text across queries",
+      "evidence_and_limit": "Live test reused 20 vectors; exact repeat had zero calls; cached historical usage is separate from new charges Native OpenRouter public-source validation: four calls $0.00049824; repeated retrieval zero API calls.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "retrieval-openrouter.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-14",
+      "title": "Reference Pattern Cache",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_common.py` SQLite caches; embeddings reuse model/vector revision + source SHA + exact text across queries",
+      "evidence_and_limit": "Live test reused 20 vectors; exact repeat had zero calls; cached historical usage is separate from new charges",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-15",
+      "title": "Architecture Memory",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Existing `remember`, `recall`, `inspect` and ai-memory adapter",
+      "evidence_and_limit": "Existing evidence/staleness regressions; verified ADR source can be a `--required` packet input",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-16",
+      "title": "Context Packing",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`context-build`, `verify-context`, existing `pack`; explicit task and mandatory sources, definitions/callers/tests; provisioned offline_tokenizer.py o200k_base proxy +15%, conservative fallback",
+      "evidence_and_limit": "Exact text and hash tampering tests; external docs/memory are deliberate separate steps, never automatic uploads Four real complete-policy packets fit 3889–6753 estimated tokens; no runtime tokenizer network loader.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-17",
+      "title": "Diff-only workflow",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Existing `focus`/`brief`, scoped changed paths, bounded failure packet with exact log pointer",
+      "evidence_and_limit": "Existing output/packing regressions; source review uses selected changes and verification, not all attachments",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-18",
+      "title": "Детерминированные проверки вместо LLM",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_checks.py`, Go/Next.js/WordPress presets; existing project architecture/lint/security commands",
+      "evidence_and_limit": "Pass/fail/missing/timeout/partial tests; ecosystem tools remain project dependencies",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-19",
+      "title": "Go quality pipeline",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_checks.py`, Go/Next.js/WordPress presets; existing project architecture/lint/security commands",
+      "evidence_and_limit": "Pass/fail/missing/timeout/partial tests; ecosystem tools remain project dependencies Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-20",
+      "title": "Возвращать Codex только ошибки",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_checks.py`, Go/Next.js/WordPress presets; existing project architecture/lint/security commands",
+      "evidence_and_limit": "Pass/fail/missing/timeout/partial tests; ecosystem tools remain project dependencies",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-21",
+      "title": "Security без LLM",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_checks.py`, Go/Next.js/WordPress presets; existing project architecture/lint/security commands",
+      "evidence_and_limit": "Pass/fail/missing/timeout/partial tests; ecosystem tools remain project dependencies",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-22",
+      "title": "Complexity / maintainability gate",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality_checks.py`, Go/Next.js/WordPress presets; existing project architecture/lint/security commands",
+      "evidence_and_limit": "Pass/fail/missing/timeout/partial tests; ecosystem tools remain project dependencies",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-23",
+      "title": "Review должен получать diff, а не repository",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Existing `focus`/`brief`, scoped changed paths, bounded failure packet with exact log pointer",
+      "evidence_and_limit": "Existing output/packing regressions; source review uses selected changes and verification, not all attachments Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-24",
+      "title": "Когда использовать более сильную модель",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Existing model-routing/manual senior gates retained",
+      "evidence_and_limit": "No automatic model promotion or new agents; explicit user policy overrides the proposal's example ladder Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-25",
+      "title": "Серверная нагрузка",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "job_queue.py: bounded durable SQLite jobs, fingerprints/dedup, stale rejection, cancellation/dead worker handling; heavy=1/retrieval=2/remote=1; resource-limited subprocesses",
+      "evidence_and_limit": "Queue and cgroup regressions plus recorded temporary systemd smoke. Spawn-to-job-record race remains documented; trusted local jobs are not a sandbox.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-26",
+      "title": "Защита сервера от параллельной нагрузки",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "job_queue.py: bounded durable SQLite jobs, fingerprints/dedup, stale rejection, cancellation/dead worker handling; heavy=1/retrieval=2/remote=1; resource-limited subprocesses",
+      "evidence_and_limit": "Queue and cgroup regressions plus recorded temporary systemd smoke. Spawn-to-job-record race remains documented; trusted local jobs are not a sandbox.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-27",
+      "title": "Что даст наибольший эффект",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Local evidence first, cached optional providers, no default all-tools/all-models execution",
+      "evidence_and_limit": "Router/provider tests; heavy/network flags are separate Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-28",
+      "title": "Что не стоит делать",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Local evidence first, cached optional providers, no default all-tools/all-models execution",
+      "evidence_and_limit": "Router/provider tests; heavy/network flags are separate Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-29",
+      "title": "Предлагаемые новые команды context-economy",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`context-build`, `verify-context`, existing `pack`; explicit task and mandatory sources, definitions/callers/tests",
+      "evidence_and_limit": "Exact text and hash tampering tests; external docs/memory are deliberate separate steps, never automatic uploads",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-30",
+      "title": "Новый Context Builder",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`context-build`, `verify-context`, existing `pack`; explicit task and mandatory sources, definitions/callers/tests; provisioned offline_tokenizer.py o200k_base proxy +15%, conservative fallback",
+      "evidence_and_limit": "Exact text and hash tampering tests; external docs/memory are deliberate separate steps, never automatic uploads Four real complete-policy packets fit 3889–6753 estimated tokens; no runtime tokenizer network loader.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-31",
+      "title": "Expected pipeline для Next.js",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality/profiles/nextjs.json`, `go.json`, plus real project profiles",
+      "evidence_and_limit": "Plans and argv contracts; heavyweight application suites not claimed as run Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-32",
+      "title": "Expected pipeline для Go",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "`quality/profiles/nextjs.json`, `go.json`, plus real project profiles",
+      "evidence_and_limit": "Plans and argv contracts; heavyweight application suites not claimed as run Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings. Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-33",
+      "title": "Почему качество вырастет",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Existing meter/pilot/benchmark; retrieval provider usage events, guard duration/status, browser measurements",
+      "evidence_and_limit": "Actual token usage supported; estimated context size is not measured billed tokens or a saving percentage Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-34",
+      "title": "Почему расход токенов уменьшится",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Existing meter/pilot/benchmark; retrieval provider usage events, guard duration/status, browser measurements",
+      "evidence_and_limit": "Actual token usage supported; estimated context size is not measured billed tokens or a saving percentage Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-35",
+      "title": "Метрики",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Existing meter/pilot/benchmark; retrieval provider usage events, guard duration/status, browser measurements",
+      "evidence_and_limit": "Four fixed actual-source queries, packet SHA verification and two timing samples; public OpenRouter charged usage. No end-to-end agent saving percentage inferred.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D1-36",
+      "title": "Рекомендуемый MVP",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Shared CLI, profiles, tests and canonical CI gate delivered as one candidate",
+      "evidence_and_limit": "Activation and required independent review remain separate gates Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D1-37",
+      "title": "Финальная рекомендуемая система",
+      "document": "reference-1.md",
+      "source_sha256": "d4ffe39a91482b55c7a5dfdcacd1850e402132d85fa41ebb7bf2c49d2fcaee4a",
+      "implementation": "Shared CLI, profiles, tests and canonical CI gate delivered as one candidate",
+      "evidence_and_limit": "Activation and required independent review remain separate gates Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D2-01",
+      "title": "Итоговый pipeline",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design.py`: JSON tokens or canonical project CSS, aliases/cycles/missing references",
+      "evidence_and_limit": "Token tests and actual HearthPulse/WordPress source validation; existing palettes are preserved Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-02",
+      "title": "Design System как единый источник истины",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design.py`: JSON tokens or canonical project CSS, aliases/cycles/missing references",
+      "evidence_and_limit": "Token tests and actual HearthPulse/WordPress source validation; existing palettes are preserved",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-03",
+      "title": "Design Tokens",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design.py`: JSON tokens or canonical project CSS, aliases/cycles/missing references",
+      "evidence_and_limit": "Token tests and actual HearthPulse/WordPress source validation; existing palettes are preserved",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-04",
+      "title": "Semantic Tokens",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design.py`: JSON tokens or canonical project CSS, aliases/cycles/missing references",
+      "evidence_and_limit": "Token tests and actual HearthPulse/WordPress source validation; existing palettes are preserved",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-05",
+      "title": "Component Registry",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Project-owned component registry and `quality/design-system/primitives.css`",
+      "evidence_and_limit": "Existing components referenced; new button/card/stack/icon primitives are opt-in, not injected into production",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-06",
+      "title": "Shared Manacost Design System",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Project-owned component registry and `quality/design-system/primitives.css`",
+      "evidence_and_limit": "Existing components referenced; new button/card/stack/icon primitives are opt-in, not injected into production",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-07",
+      "title": "CSS Quality Gate",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "tinycss2 nested-rule parser; token/raw-color/scale/important/duplicate/specificity/motion checks",
+      "evidence_and_limit": "Nested CSS/comments regression; focused contract complements project Stylelint/ESLint, not a full CSS semantic verifier",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-08",
+      "title": "Computed Style Validator",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`quality/browser.mjs`: computed property contracts, deterministic PNGs, explicit baseline acceptance, pixel diffs",
+      "evidence_and_limit": "Real Chromium test: missing baseline fails; unchanged passes; changed screen fails",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-09",
+      "title": "Visual Regression",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`quality/browser.mjs`: computed property contracts, deterministic PNGs, explicit baseline acceptance, pixel diffs",
+      "evidence_and_limit": "Real Chromium test: missing baseline fails; unchanged passes; changed screen fails",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-10",
+      "title": "Screenshot-driven workflow",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`quality/browser.mjs`: computed property contracts, deterministic PNGs, explicit baseline acceptance, pixel diffs",
+      "evidence_and_limit": "Real Chromium test: missing baseline fails; unchanged passes; changed screen fails",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-11",
+      "title": "Typography Guard",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Token/scale checks, computed dimensions and existing component registry; shared primitive geometry",
+      "evidence_and_limit": "Explicit selector/property assertions in browser config; no assertion that existing whole sites are visually uniform",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-12",
+      "title": "Spacing Guard",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Token/scale checks, computed dimensions and existing component registry; shared primitive geometry",
+      "evidence_and_limit": "Explicit selector/property assertions in browser config; no assertion that existing whole sites are visually uniform",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-13",
+      "title": "Button Consistency",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Token/scale checks, computed dimensions and existing component registry; shared primitive geometry",
+      "evidence_and_limit": "Explicit selector/property assertions in browser config; no assertion that existing whole sites are visually uniform",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-14",
+      "title": "Icon / SVG System",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Safe XML validator + `svg-normalize` using pinned SVGO; explicit monochrome conversion, new output only",
+      "evidence_and_limit": "Entity/script/external-reference rejection and actual SVGO test",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-15",
+      "title": "Motion System",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Shared duration/easing tokens, reduced-motion CSS; CSS transition-all rule; reduced-motion browser snapshots",
+      "evidence_and_limit": "Animation libraries remain an application choice; no new always-loaded dependency",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-16",
+      "title": "Motion Rules",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Shared duration/easing tokens, reduced-motion CSS; CSS transition-all rule; reduced-motion browser snapshots",
+      "evidence_and_limit": "Animation libraries remain an application choice; no new always-loaded dependency",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-17",
+      "title": "Responsive Guard",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Configured widths, overflow, computed styles, keyboard order and axe WCAG AA",
+      "evidence_and_limit": "Browser regression catches accessible-name and geometry failures; manual assistive-technology review still matters",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-18",
+      "title": "Layout Constraints",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Configured widths, overflow, computed styles, keyboard order and axe WCAG AA",
+      "evidence_and_limit": "Browser regression catches accessible-name and geometry failures; manual assistive-technology review still matters",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-19",
+      "title": "Accessibility Guard",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Configured widths, overflow, computed styles, keyboard order and axe WCAG AA",
+      "evidence_and_limit": "Browser regression catches accessible-name and geometry failures; manual assistive-technology review still matters",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-20",
+      "title": "Asset Integration Pipeline",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Pillow AVIF/WebP variants; five presets; optional preprovisioned rembg; SVGO",
+      "evidence_and_limit": "Actual conversion test; original source immutable; Pillow substitutes for Sharp/imgproxy without a new image server Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-21",
+      "title": "Asset Roles",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Pillow AVIF/WebP variants; five presets; optional preprovisioned rembg; SVGO",
+      "evidence_and_limit": "Actual conversion test; original source immutable; Pillow substitutes for Sharp/imgproxy without a new image server Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-22",
+      "title": "Asset Presets",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Pillow AVIF/WebP variants; five presets; optional preprovisioned rembg; SVGO",
+      "evidence_and_limit": "Actual conversion test; original source immutable; Pillow substitutes for Sharp/imgproxy without a new image server Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-23",
+      "title": "Asset Processing Tools",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Pillow AVIF/WebP variants; five presets; optional preprovisioned rembg; SVGO",
+      "evidence_and_limit": "Actual conversion test; original source immutable; Pillow substitutes for Sharp/imgproxy without a new image server Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-24",
+      "title": "GameAsset Component",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Framework-neutral `gameAsset()` DOM component usable from React refs or WordPress modules",
+      "evidence_and_limit": "Browser test checks picture sources, decorative semantics, dimensions and unsafe-origin rejection",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-25",
+      "title": "Asset Color Harmonization",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Saturation/blur/alpha, dominant colors, focal point, preset overlay and text-safe area in metadata/CSS",
+      "evidence_and_limit": "Focal heuristic is edge saliency, not semantic subject detection; inspect hero crop/contrast before baseline acceptance Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-26",
+      "title": "Text Safe Zones",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Saturation/blur/alpha, dominant colors, focal point, preset overlay and text-safe area in metadata/CSS",
+      "evidence_and_limit": "Focal heuristic is edge saliency, not semantic subject detection; inspect hero crop/contrast before baseline acceptance Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-27",
+      "title": "Asset Metadata",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Saturation/blur/alpha, dominant colors, focal point, preset overlay and text-safe area in metadata/CSS",
+      "evidence_and_limit": "Focal heuristic is edge saliency, not semantic subject detection; inspect hero crop/contrast before baseline acceptance Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-28",
+      "title": "Design Context для Codex",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design-context`: bounded lexical registry search; tokens/stories/responsive rules, screenshot path+SHA, asset preset",
+      "evidence_and_limit": "Registry/context tests; local screenshot references, not a visual-embedding search engine",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-29",
+      "title": "UI Context Retrieval",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design-context`: bounded lexical registry search; tokens/stories/responsive rules, screenshot path+SHA, asset preset",
+      "evidence_and_limit": "Registry/context tests; local screenshot references, not a visual-embedding search engine",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-30",
+      "title": "Component Similarity Search",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design-context`: bounded lexical registry search; tokens/stories/responsive rules, screenshot path+SHA, asset preset",
+      "evidence_and_limit": "Registry/context tests; local screenshot references, not a visual-embedding search engine",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-31",
+      "title": "Screenshot Reference Search",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design-context`: bounded lexical registry search; tokens/stories/responsive rules, screenshot path+SHA, asset preset",
+      "evidence_and_limit": "Registry/context tests; local screenshot references, not a visual-embedding search engine",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-32",
+      "title": "Design Review без большого LLM-контекста",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Browser before/after/diff artifacts and failure report; small design context",
+      "evidence_and_limit": "Only selected component/evidence reaches review; screenshots are not silently auto-approved Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-33",
+      "title": "UI Quality Gate",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design-guard`, browser executor and project Storybook/type/quality commands",
+      "evidence_and_limit": "Existing toolchain reused; no mandatory replacement of project tooling",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-34",
+      "title": "CSS / Next.js инструменты",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`design-guard`, browser executor and project Storybook/type/quality commands",
+      "evidence_and_limit": "Existing toolchain reused; no mandatory replacement of project tooling",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-35",
+      "title": "Рекомендуемая структура проекта",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`quality/guards/design`, design-system, profiles; `design_guard.py`, `asset-prepare`, `svg-normalize`",
+      "evidence_and_limit": "Public CLI tests; documented project-relative output and source paths Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-36",
+      "title": "Design Guard",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`quality/guards/design`, design-system, profiles; `design_guard.py`, `asset-prepare`, `svg-normalize`",
+      "evidence_and_limit": "Public CLI tests; documented project-relative output and source paths",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D2-37",
+      "title": "Asset CLI",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "`quality/guards/design`, design-system, profiles; `design_guard.py`, `asset-prepare`, `svg-normalize`",
+      "evidence_and_limit": "Public CLI tests; documented project-relative output and source paths Real project banner: five presets/20 AVIF-WebP variants; rembg CPU pinned U2Net inference with sockets forbidden; original unchanged. Manual crop/text contrast review remains required.",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-38",
+      "title": "Workflow изменения UI",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Plan → local checks → selected browser contract → inspect failure → accept baseline explicitly",
+      "evidence_and_limit": "No bulk CSS rewrite, all-Storybook prompt or automatic project restyling Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-39",
+      "title": "Что даст наибольший эффект",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Plan → local checks → selected browser contract → inspect failure → accept baseline explicitly",
+      "evidence_and_limit": "No bulk CSS rewrite, all-Storybook prompt or automatic project restyling Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-40",
+      "title": "Что не делать",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Plan → local checks → selected browser contract → inspect failure → accept baseline explicitly",
+      "evidence_and_limit": "No bulk CSS rewrite, all-Storybook prompt or automatic project restyling Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-41",
+      "title": "Как это встроить в Manacost-Labs/Server",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Plan → local checks → selected browser contract → inspect failure → accept baseline explicitly",
+      "evidence_and_limit": "No bulk CSS rewrite, all-Storybook prompt or automatic project restyling Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D2-42",
+      "title": "Финальная архитектура",
+      "document": "reference-2.md",
+      "source_sha256": "6a906a081ae57b43e1c5fea99fc356264fb38106fb3c4bca6fff9b1e5361a93d",
+      "implementation": "Plan → local checks → selected browser contract → inspect failure → accept baseline explicitly",
+      "evidence_and_limit": "No bulk CSS rewrite, all-Storybook prompt or automatic project restyling Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-01",
+      "title": "Общая архитектура",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Versioned check contracts, stack/risk route, scoped secret/Semgrep adapters",
+      "evidence_and_limit": "Missing tools and permission gaps never become passes; no runtime production security audit Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-02",
+      "title": "Общие правила",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Versioned check contracts, stack/risk route, scoped secret/Semgrep adapters",
+      "evidence_and_limit": "Missing tools and permission gaps never become passes; no runtime production security audit Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-03",
+      "title": "Security Layer",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Versioned check contracts, stack/risk route, scoped secret/Semgrep adapters",
+      "evidence_and_limit": "Missing tools and permission gaps never become passes; no runtime production security audit",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-04",
+      "title": "Next.js Engineering Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Next.js/HearthPulse profiles call types, lint, tests, architecture, Knip, audit and explicit heavy browser/bundle hooks",
+      "evidence_and_limit": "Existing HearthPulse commands retained; performance JSON compares real supplied metrics, not invented measurements",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-05",
+      "title": "Next.js Code Quality",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Next.js/HearthPulse profiles call types, lint, tests, architecture, Knip, audit and explicit heavy browser/bundle hooks",
+      "evidence_and_limit": "Existing HearthPulse commands retained; performance JSON compares real supplied metrics, not invented measurements",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-06",
+      "title": "Next.js Architecture Rules",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Next.js/HearthPulse profiles call types, lint, tests, architecture, Knip, audit and explicit heavy browser/bundle hooks",
+      "evidence_and_limit": "Existing HearthPulse commands retained; performance JSON compares real supplied metrics, not invented measurements",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-07",
+      "title": "Next.js Performance Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Next.js/HearthPulse profiles call types, lint, tests, architecture, Knip, audit and explicit heavy browser/bundle hooks",
+      "evidence_and_limit": "Existing HearthPulse commands retained; performance JSON compares real supplied metrics, not invented measurements",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-08",
+      "title": "Next.js Performance Budgets",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Next.js/HearthPulse profiles call types, lint, tests, architecture, Knip, audit and explicit heavy browser/bundle hooks",
+      "evidence_and_limit": "Existing HearthPulse commands retained; performance JSON compares real supplied metrics, not invented measurements",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-09",
+      "title": "Go Engineering Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "gofmt failure wrapper, vet, golangci-lint, focused tests, govulncheck, race and repeated benchmem",
+      "evidence_and_limit": "Optional tools must exist; `performance-check` evaluates exported comparable metrics; no deployed Go service changed Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-10",
+      "title": "Go Code Quality",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "gofmt failure wrapper, vet, golangci-lint, focused tests, govulncheck, race and repeated benchmem",
+      "evidence_and_limit": "Optional tools must exist; `performance-check` evaluates exported comparable metrics; no deployed Go service changed Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-11",
+      "title": "Go Security",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "gofmt failure wrapper, vet, golangci-lint, focused tests, govulncheck, race and repeated benchmem",
+      "evidence_and_limit": "Optional tools must exist; `performance-check` evaluates exported comparable metrics; no deployed Go service changed Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-12",
+      "title": "Go Performance",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "gofmt failure wrapper, vet, golangci-lint, focused tests, govulncheck, race and repeated benchmem",
+      "evidence_and_limit": "Optional tools must exist; `performance-check` evaluates exported comparable metrics; no deployed Go service changed Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-13",
+      "title": "Go Performance Regression",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "gofmt failure wrapper, vet, golangci-lint, focused tests, govulncheck, race and repeated benchmem",
+      "evidence_and_limit": "Optional tools must exist; `performance-check` evaluates exported comparable metrics; no deployed Go service changed Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-14",
+      "title": "PHP / WordPress Engineering Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "WordPress preset: WPCS, PHPStan, dry-run Rector, Deptrac; real hs-manacost make targets and WP security module",
+      "evidence_and_limit": "Native make code-quality passed WPCS/PHPStan; existing 29-entry baseline preserved. No source PHP behavior changed.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-15",
+      "title": "WordPress Coding Standards",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "WordPress preset: WPCS, PHPStan, dry-run Rector, Deptrac; real hs-manacost make targets and WP security module",
+      "evidence_and_limit": "Native make code-quality passed WPCS/PHPStan; existing 29-entry baseline preserved. No source PHP behavior changed.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-16",
+      "title": "PHPStan",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "WordPress preset: WPCS, PHPStan, dry-run Rector, Deptrac; real hs-manacost make targets and WP security module",
+      "evidence_and_limit": "Native make code-quality passed WPCS/PHPStan; existing 29-entry baseline preserved. No source PHP behavior changed.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-17",
+      "title": "Rector",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Pinned Rector dry-run plus source/diff-hashed six-proposal ratchet",
+      "evidence_and_limit": "Native ratchet passed and regression rejects new/changed proposals. Existing debt is explicit, not auto-accepted.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-18",
+      "title": "Deptrac",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "deptrac/deptrac 4.7.2 class/function rules, explicit two Newspaper adapter boundaries",
+      "evidence_and_limit": "0 violations, 0 skipped, 35 allowed; 4442 uncovered global/vendor tokens visible. Initial direction guard, not full architecture coverage.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-19",
+      "title": "WordPress Security Rules",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "WordPress preset: WPCS, PHPStan, dry-run Rector, Deptrac; real hs-manacost make targets and WP security module",
+      "evidence_and_limit": "No vendor/commercial-theme modifications; nonce/auth/SQL/escaping expectations remain scoped review rules Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-20",
+      "title": "WPScan",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Pinned, bounded WPScan passive container on own disposable loopback stack; separate no-registration WPVulnerability inventory adapter",
+      "evidence_and_limit": "WPScan exit0; authenticated advisory DB unavailable without an account token, wrapper correctly fails. Public API live response reports one core 6.9.7 advisory and three unknown private plugins (the verified Newspaper alias is covered); status failed, not green. No production scan.",
+      "status": "implemented-with-external-gap",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-21",
+      "title": "Composer Audit",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Composer adapter; custom check contract supports explicitly configured WPScan",
+      "evidence_and_limit": "Composer locked audit passed; no advisories reported at verification time.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-22",
+      "title": "PHPUnit / Pest",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Pinned PHPUnit 11 with real isolated cache fixture scenarios",
+      "evidence_and_limit": "22 PHPUnit scenarios and native WordPress integration passed.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-23",
+      "title": "Infection",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Infection 0.29.14, one worker, real CLI Xdebug coverage and optional CI dispatch",
+      "evidence_and_limit": "75.47% MSI against 70% threshold after fixing missing boundary scenarios. Scoped to metadata-cache class, not whole project mutation coverage.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-24",
+      "title": "WordPress Performance",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Native four-screen performance target with five samples each and configured thresholds",
+      "evidence_and_limit": "Local integration budgets passed. Report before fields are configured baselines, not measured pre-change improvement.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-25",
+      "title": "Query Monitor",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Query Monitor 4.0.7 temporarily activated only in owned disposable stack; browser numeric panel export",
+      "evidence_and_limit": "Final actual repeat: 24 panels, 50 SQL queries, 0 SQL errors, 144 hooks, 80 script assets. Earlier sample 36 queries/110 hooks. No SQL text/secrets exported; task containers stopped.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-26",
+      "title": "WordPress Performance Rules",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Native four-screen performance target with five samples each and configured thresholds",
+      "evidence_and_limit": "Local integration budgets passed. Report before fields are configured baselines, not measured pre-change improvement.",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-27",
+      "title": "Clean Code Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Project lint/architecture/Knip, Deptrac, audits and explicit-source Gitleaks",
+      "evidence_and_limit": "Full exact tool output stays private in reports; no global server scan",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-28",
+      "title": "Architecture Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Project lint/architecture/Knip, Deptrac, audits and explicit-source Gitleaks",
+      "evidence_and_limit": "Full exact tool output stays private in reports; no global server scan",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-29",
+      "title": "Dependency Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Project lint/architecture/Knip, Deptrac, audits and explicit-source Gitleaks",
+      "evidence_and_limit": "Full exact tool output stays private in reports; no global server scan",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-30",
+      "title": "Secret Guard",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Project lint/architecture/Knip, Deptrac, audits and explicit-source Gitleaks",
+      "evidence_and_limit": "Full exact tool output stays private in reports; no global server scan",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-31",
+      "title": "Performance Budget",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Finite metric validation, baseline comparison, ≤2000-token packet and report pointers",
+      "evidence_and_limit": "Tests cover missing/NaN/baseline/timeout/partial results; project metric thresholds are explicit config",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-32",
+      "title": "Failure Packet",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Finite metric validation, baseline comparison, ≤2000-token packet and report pointers",
+      "evidence_and_limit": "Tests cover missing/NaN/baseline/timeout/partial results; project metric thresholds are explicit config",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-33",
+      "title": "Diff-only Review",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Finite metric validation, baseline comparison, ≤2000-token packet and report pointers",
+      "evidence_and_limit": "Tests cover missing/NaN/baseline/timeout/partial results; project metric thresholds are explicit config Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-34",
+      "title": "Risk-based Verification",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Fast/medium/heavy selection, sensitive paths raise risk, independent heavy/network flags",
+      "evidence_and_limit": "Routing/regression tests; project policies can demand additional checks and reviews",
+      "status": "implemented-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-35",
+      "title": "Next.js Default Gate",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Fast/medium/heavy selection, sensitive paths raise risk, independent heavy/network flags",
+      "evidence_and_limit": "Routing/regression tests; project policies can demand additional checks and reviews",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-36",
+      "title": "Go Default Gate",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Fast/medium/heavy selection, sensitive paths raise risk, independent heavy/network flags",
+      "evidence_and_limit": "Routing/regression tests; project policies can demand additional checks and reviews Go is not the stack of either selected application; no deployed Go service or production benchmark is claimed.",
+      "status": "adapter-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-37",
+      "title": "PHP / WordPress Default Gate",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Fast/medium/heavy selection, sensitive paths raise risk, independent heavy/network flags",
+      "evidence_and_limit": "Routing/regression tests; project policies can demand additional checks and reviews",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-38",
+      "title": "Что запускать не всегда",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "Fast/medium/heavy selection, sensitive paths raise risk, independent heavy/network flags",
+      "evidence_and_limit": "Routing/regression tests; project policies can demand additional checks and reviews Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-39",
+      "title": "Integration with Manacost-Labs/Server",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "`engineering-guard plan/verify`, `quality-plan/quality-verify`, real server profiles and canonical repository CI",
+      "evidence_and_limit": "Candidate source is in the actual skills repository supplying the installed tool; live activation not performed Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-40",
+      "title": "Единая команда",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "`engineering-guard plan/verify`, `quality-plan/quality-verify`, real server profiles and canonical repository CI",
+      "evidence_and_limit": "Candidate source is in the actual skills repository supplying the installed tool; live activation not performed",
+      "status": "project-tested",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "completion.md"
+      ],
+      "project_evidence_present": true
+    },
+    {
+      "id": "D3-41",
+      "title": "Итоговая система Manacost",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "`engineering-guard plan/verify`, `quality-plan/quality-verify`, real server profiles and canonical repository CI",
+      "evidence_and_limit": "Candidate source is in the actual skills repository supplying the installed tool; live activation not performed Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D3-42",
+      "title": "Рекомендуемый порядок внедрения",
+      "document": "reference-3.md",
+      "source_sha256": "57b203d794aaa89d46c2f461c11bf95320ba5863bea31fa68f2122ad93f8d232",
+      "implementation": "`engineering-guard plan/verify`, `quality-plan/quality-verify`, real server profiles and canonical repository CI",
+      "evidence_and_limit": "Candidate source is in the actual skills repository supplying the installed tool; live activation not performed Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": true,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ],
+      "project_evidence_present": false
+    },
+    {
+      "id": "D4-01",
+      "title": "Бюджеты",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "`quality/ROUTER.md` ≤1000 conservative estimated tokens; guard modules ≤1500; packet ≤12000; provisioned offline_tokenizer.py o200k_base proxy +15%, conservative fallback",
+      "evidence_and_limit": "Router/packet tests; CLI defaults to 8000 packet tokens, not an always-filled budget Four real complete-policy packets fit 3889–6753 estimated tokens; no runtime tokenizer network loader.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-02",
+      "title": "Главное правило",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "`quality/ROUTER.md` ≤1000 conservative estimated tokens; guard modules ≤1500; packet ≤12000",
+      "evidence_and_limit": "Router/packet tests; CLI defaults to 8000 packet tokens, not an always-filled budget Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D4-03",
+      "title": "Permanent Router",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "`quality/ROUTER.md` ≤1000 conservative estimated tokens; guard modules ≤1500; packet ≤12000",
+      "evidence_and_limit": "Router/packet tests; CLI defaults to 8000 packet tokens, not an always-filled budget",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-04",
+      "title": "Trigger-based loading",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "`guard-context` selects 1–3 modules by changed paths, task and risk",
+      "evidence_and_limit": "Specialized assets/SVG/tokens/components/performance paths; multi-stack overload asks for a bounded phase",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-05",
+      "title": "Design Guard",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "`guard-context` selects 1–3 modules by changed paths, task and risk",
+      "evidence_and_limit": "Specialized assets/SVG/tokens/components/performance paths; multi-stack overload asks for a bounded phase",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-06",
+      "title": "Engineering Guard",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "`guard-context` selects 1–3 modules by changed paths, task and risk",
+      "evidence_and_limit": "Specialized assets/SVG/tokens/components/performance paths; multi-stack overload asks for a bounded phase",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-07",
+      "title": "Не запускать все проверки всегда",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Check tiers and explicit permissions; local retrieval before evidence-gap providers",
+      "evidence_and_limit": "No model switch, all-checks run or paid call by default",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-08",
+      "title": "Model calls",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Check tiers and explicit permissions; local retrieval before evidence-gap providers",
+      "evidence_and_limit": "No model switch, all-checks run or paid call by default",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-09",
+      "title": "Retrieval escalation",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Check tiers and explicit permissions; local retrieval before evidence-gap providers",
+      "evidence_and_limit": "No model switch, all-checks run or paid call by default",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-10",
+      "title": "Embeddings",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Bounded providers, preview, source/model/version cache, reservations and limits",
+      "evidence_and_limit": "Backend cost ceiling is an operator contract/reservation, not an API billing guarantee Native OpenRouter public-source validation: four calls $0.00049824; repeated retrieval zero API calls.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "retrieval-openrouter.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D4-11",
+      "title": "Reranker",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Bounded providers, preview, source/model/version cache, reservations and limits",
+      "evidence_and_limit": "Backend cost ceiling is an operator contract/reservation, not an API billing guarantee Native OpenRouter public-source validation: four calls $0.00049824; repeated retrieval zero API calls.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "retrieval-openrouter.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D4-12",
+      "title": "External GitHub reference search",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Bounded providers, preview, source/model/version cache, reservations and limits",
+      "evidence_and_limit": "Backend cost ceiling is an operator contract/reservation, not an API billing guarantee",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-13",
+      "title": "Context7",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Bounded providers, preview, source/model/version cache, reservations and limits",
+      "evidence_and_limit": "Backend cost ceiling is an operator contract/reservation, not an API billing guarantee",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-14",
+      "title": "Design context",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "≤3000-token design context, ≤2000-token diagnostics, selected sources/diff/artifacts",
+      "evidence_and_limit": "Exact files/logs remain addressable; mandatory instructions are not silently summarized away",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-15",
+      "title": "Failure packets",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "≤3000-token design context, ≤2000-token diagnostics, selected sources/diff/artifacts",
+      "evidence_and_limit": "Exact files/logs remain addressable; mandatory instructions are not silently summarized away",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-16",
+      "title": "Review context",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "≤3000-token design context, ≤2000-token diagnostics, selected sources/diff/artifacts",
+      "evidence_and_limit": "Exact files/logs remain addressable; mandatory instructions are not silently summarized away Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D4-17",
+      "title": "Cache-first",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "Hash/version caches, bounded retention, shared heavy/index lock and optional cgroup limits",
+      "evidence_and_limit": "Default stores share locks; independent custom state roots intentionally create separate coordination domains",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-18",
+      "title": "Concurrency / server load",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "job_queue.py: bounded durable SQLite jobs, fingerprints/dedup, stale rejection, cancellation/dead worker handling; heavy=1/retrieval=2/remote=1; resource-limited subprocesses",
+      "evidence_and_limit": "Queue and cgroup regressions plus recorded temporary systemd smoke. Spawn-to-job-record race remains documented; trusted local jobs are not a sandbox.",
+      "status": "implemented-tested",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "completion.md",
+        "verification.md"
+      ]
+    },
+    {
+      "id": "D4-19",
+      "title": "Suggested modular structure",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "16 on-demand modules and thin router; local deterministic defaults; optional expensive features",
+      "evidence_and_limit": "Server bootstrap/installed permanent entrypoints remain untouched pending review and activation authority Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D4-20",
+      "title": "Hard rules",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "16 on-demand modules and thin router; local deterministic defaults; optional expensive features",
+      "evidence_and_limit": "Server bootstrap/installed permanent entrypoints remain untouched pending review and activation authority Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    },
+    {
+      "id": "D4-21",
+      "title": "Recommended default",
+      "document": "reference-4.md",
+      "source_sha256": "4cb0ff5327020b3b522484d1d1be5f9eba84d5601e0b5b723f046ca54b4396c8",
+      "implementation": "16 on-demand modules and thin router; local deterministic defaults; optional expensive features",
+      "evidence_and_limit": "Server bootstrap/installed permanent entrypoints remain untouched pending review and activation authority Workflow requirement, not a claim of automatic runtime enforcement or universal quality/savings.",
+      "status": "workflow-documented",
+      "project_evidence_required": false,
+      "activation_verified": false,
+      "verification": [
+        "coverage.md",
+        "completion.md"
+      ]
+    }
+  ]
+}

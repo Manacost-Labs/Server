@@ -1,0 +1,17 @@
+{
+  "goal": "Implement all four reference documents: token retrieval, design quality, engineering quality and bounded on-demand context; integrate HearthPulse and hs-manacost.ru in isolated candidates.",
+  "criteria": [
+    "Every reference section has an implementation or explicitly documented applicability mapping",
+    "Commands execute real retrieval/checks and fail honestly when required tools/configuration are absent",
+    "Optional network, costly models and heavy checks require explicit flags and budgets",
+    "Focused tests cover stale cache, invalid sources, routing, failed checks, missing tools and budget limits",
+    "Project integration preserves existing visual contracts and quality commands",
+    "No commits, pushes, activation or production writes without authority"
+  ],
+  "constraints": [
+    "No subagents or model switching",
+    "Never edit installed release files or secrets",
+    "Reuse source baseline 07ca752; prepare isolated worktrees",
+    "Report measured results only; no claimed token savings without observations"
+  ]
+}

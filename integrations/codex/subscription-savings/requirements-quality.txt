@@ -1,0 +1,4 @@
+tinycss2==1.4.0
+defusedxml==0.7.1
+Pillow==12.0.0
+tiktoken==0.14.0

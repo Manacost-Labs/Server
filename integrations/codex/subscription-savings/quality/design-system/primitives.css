@@ -1,0 +1,41 @@
+/* Opt-in semantic contract. Each project binds colors/fonts to its own canonical tokens. */
+:where(.mc-ui) {
+  --mc-space-1: 0.25rem;
+  --mc-space-2: 0.5rem;
+  --mc-space-3: 0.75rem;
+  --mc-space-4: 1rem;
+  --mc-radius: 0.5rem;
+  --mc-control-height: 2.75rem;
+  --mc-motion-fast: 120ms;
+  --mc-motion-normal: 200ms;
+  --mc-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  color: var(--mc-text);
+  font-family: var(--mc-font);
+}
+.mc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mc-space-2);
+  min-block-size: var(--mc-control-height);
+  padding-inline: var(--mc-space-4);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius);
+  background: var(--mc-action);
+  color: var(--mc-action-text);
+  font: inherit;
+  transition: opacity var(--mc-motion-fast) var(--mc-motion-ease);
+}
+.mc-button:focus-visible { outline: 2px solid var(--mc-focus); outline-offset: 2px; }
+.mc-button:disabled { opacity: 0.5; cursor: not-allowed; }
+.mc-card { padding: var(--mc-space-4); border: 1px solid var(--mc-border); border-radius: var(--mc-radius); background: var(--mc-surface); }
+.mc-stack { display: flex; flex-direction: column; gap: var(--mc-space-4); }
+.mc-icon { display: inline-block; inline-size: 1.25rem; block-size: 1.25rem; fill: currentColor; flex: none; }
+.mc-game-asset { display: block; position: relative; overflow: hidden; isolation: isolate; }
+.mc-game-asset img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.mc-game-asset::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(0 0 0 / var(--mc-asset-overlay)), transparent); pointer-events: none; }
+.mc-game-asset[data-preset='decorative-overlay'] { pointer-events: none; }
+/* Keep copy above the image in the hero's left 40%, matching hero-art metadata. */
+.mc-hero-copy { position: relative; z-index: 1; max-inline-size: 40%; }
+@media (max-width: 48rem) { .mc-hero-copy { max-inline-size: 100%; } }
+@media (prefers-reduced-motion: reduce) { .mc-button { transition: none; } }

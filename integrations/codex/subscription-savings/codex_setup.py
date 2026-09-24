@@ -14,7 +14,7 @@ from pathlib import Path
 import tomllib
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "0.153.0"
+VERSION = "0.156.1"
 PROFILES = {"minimal": [], "code": ["codegraph"], "web": ["chrome-devtools"],
             "research": ["context7", "openaiDeveloperDocs"], "github": ["github"],
             "infra": ["cloudflare", "ovhcloud"], "typeui": []}
@@ -114,8 +114,9 @@ def dependencies(servers):
 
 
 def validate_runtime(home, profile):
-    # app-server accepts --strict-config but rejects -p in 0.153.0. Strictly
-    # validate the base; effective() restricts overlays to MCP/plugin booleans.
+    # Strictly validate the base separately from the profile merge. Both checks
+    # are exercised against the supported real CLI, without starting a model.
+    # effective() restricts overlays to MCP/plugin booleans.
     effective(home, profile)
     subprocess.run(["codex", "app-server", "--strict-config"], input="", cwd=home,
                    env={**os.environ, "CODEX_HOME": str(home)}, capture_output=True, text=True,

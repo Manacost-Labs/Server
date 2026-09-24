@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "stack": "go",
+  "checks": [
+    {
+      "id": "gofmt",
+      "argv": [
+        "{python}",
+        "{quality_root}/quality/go_format.py",
+        "{changed_go}"
+      ],
+      "tier": "fast",
+      "paths": [
+        "**/*.go"
+      ]
+    },
+    {
+      "id": "vet",
+      "argv": [
+        "go",
+        "vet",
+        "{go_packages}"
+      ],
+      "tier": "fast",
+      "paths": [
+        "**/*.go"
+      ]
+    },
+    {
+      "id": "lint",
+      "argv": [
+        "golangci-lint",
+        "run",
+        "{go_packages}"
+      ],
+      "tier": "fast",
+      "paths": [
+        "**/*.go"
+      ]
+    },
+    {
+      "id": "focused-tests",
+      "argv": [
+        "go",
+        "test",
+        "{go_packages}"
+      ],
+      "tier": "fast",
+      "paths": [
+        "**/*.go"
+      ]
+    },
+    {
+      "id": "vulnerabilities",
+      "argv": [
+        "govulncheck",
+        "./..."
+      ],
+      "tier": "medium",
+      "paths": [],
+      "network": true
+    },
+    {
+      "id": "race",
+      "argv": [
+        "go",
+        "test",
+        "-race",
+        "./..."
+      ],
+      "tier": "heavy",
+      "paths": [],
+      "timeout": 600
+    },
+    {
+      "id": "benchmarks",
+      "argv": [
+        "go",
+        "test",
+        "-run",
+        "^$",
+        "-bench",
+        ".",
+        "-benchmem",
+        "-count",
+        "5",
+        "./..."
+      ],
+      "tier": "heavy",
+      "paths": [],
+      "timeout": 600
+    },
+    {
+      "id": "secrets",
+      "argv": [
+        "{python}",
+        "{quality_root}/quality/secret_scan.py",
+        "{changed}"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "static-security",
+      "argv": [
+        "codex-semgrep",
+        "{changed}"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "network": true
+    }
+  ],
+  "heavy_limits": {
+    "cpu_percent": 200,
+    "memory_mb": 2048
+  }
+}

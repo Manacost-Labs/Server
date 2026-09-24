@@ -21,7 +21,7 @@ import token_budget  # noqa: E402
 FAKE = '''#!/usr/bin/env python3
 import json,os,pathlib,sys,tomllib
 a=sys.argv[1:];home=pathlib.Path(os.environ['CODEX_HOME'])
-if a==['--version']: print('codex-cli 0.153.0')
+if a==['--version']: print('codex-cli 0.156.1')
 elif a==['--help']: print('-p <CONFIG_PROFILE_V2> $CODEX_HOME/<name>.config.toml')
 elif 'app-server' in a: pass
 elif 'list' in a:
@@ -135,7 +135,7 @@ class SetupE2E(unittest.TestCase):
             stream.write('\n[mcp_servers.surprise]\ncommand="true"\nenabled=true\n')
         result = self.run_process(["bash", INTEGRATION / "bin/codex-context", "minimal"])
         self.assertIn("Incompatible minimal MCP set", result.stderr)
-        self.fake.write_text(FAKE.replace("codex-cli 0.153.0", "codex-cli 0.152.0"))
+        self.fake.write_text(FAKE.replace("codex-cli 0.156.1", "codex-cli 0.152.0"))
         self.assertIn("Unsupported Codex version", self.installer("--dry-run").stderr)
 
     def test_typeui_plugin_preserved_without_enabling_mcp(self):

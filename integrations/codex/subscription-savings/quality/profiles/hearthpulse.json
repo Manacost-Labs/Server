@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "stack": "nextjs",
+  "project": "HearthPulse",
+  "design": {
+    "tokens": {
+      "from_css": [
+        "src/styles/tokens.css"
+      ]
+    },
+    "token_sources": [
+      "src/styles/tokens.css"
+    ],
+    "registry": [
+      {
+        "name": "HeaderProfileButton",
+        "source": "src/app/shell/HeaderProfileButton.tsx",
+        "stories": [
+          "src/app/shell/HeaderProfileButton.stories.tsx"
+        ],
+        "tokens": [
+          "--arena-gold",
+          "--arena-ink"
+        ],
+        "states": [
+          "signed-out",
+          "signed-in",
+          "focus"
+        ]
+      },
+      {
+        "name": "SubscriptionPurchaseButtons",
+        "source": "src/components/SubscriptionPurchaseButtons.tsx",
+        "tokens": [
+          "--arena-gold"
+        ],
+        "states": [
+          "available",
+          "pending"
+        ]
+      },
+      {
+        "name": "ConstructedCardDownloadButton",
+        "source": "src/features/ConstructedCardDownloadButton.tsx",
+        "tokens": [
+          "--arena-ink"
+        ],
+        "states": [
+          "ready",
+          "loading"
+        ]
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "types",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "next-types",
+      "argv": [
+        "npm",
+        "run",
+        "lint:next"
+      ],
+      "tier": "fast",
+      "paths": [
+        "apps/public-web/**"
+      ]
+    },
+    {
+      "id": "test-registry",
+      "argv": [
+        "npm",
+        "run",
+        "test:registry"
+      ],
+      "tier": "fast",
+      "paths": []
+    },
+    {
+      "id": "architecture",
+      "argv": [
+        "npm",
+        "run",
+        "lint:architecture"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "security",
+      "argv": [
+        "npm",
+        "run",
+        "security:semgrep"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "network": true
+    },
+    {
+      "id": "unused-dependencies",
+      "argv": [
+        "npm",
+        "run",
+        "quality:knip"
+      ],
+      "tier": "medium",
+      "paths": []
+    },
+    {
+      "id": "storybook",
+      "argv": [
+        "npm",
+        "run",
+        "test:storybook"
+      ],
+      "tier": "medium",
+      "paths": [],
+      "family": "design"
+    },
+    {
+      "id": "storybook-build",
+      "argv": [
+        "npm",
+        "run",
+        "build-storybook"
+      ],
+      "tier": "heavy",
+      "paths": [],
+      "family": "design",
+      "timeout": 600
+    },
+    {
+      "id": "design-tokens",
+      "argv": [
+        "{python}",
+        "{quality_root}/design_guard.py",
+        "--profile",
+        "hearthpulse",
+        "tokens"
+      ],
+      "tier": "fast",
+      "paths": [],
+      "family": "design"
+    },
+    {
+      "id": "design-components",
+      "argv": [
+        "{python}",
+        "{quality_root}/design_guard.py",
+        "--profile",
+        "hearthpulse",
+        "components"
+      ],
+      "tier": "fast",
+      "paths": [],
+      "family": "design"
+    }
+  ],
+  "heavy_limits": {
+    "cpu_percent": 200,
+    "memory_mb": 2048
+  }
+}
